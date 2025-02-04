@@ -27,6 +27,9 @@ def uniquePaths_4(m: int, n: int) -> int:
     return math.comb(m+n-2,m-1)
 
 def uniquePaths_5(m: int, n: int) -> int:
+    """
+        滚动数组，状态压缩
+    """
     dp = [1]*n
     for i in range(1, m):
         for j in range(1, n):
