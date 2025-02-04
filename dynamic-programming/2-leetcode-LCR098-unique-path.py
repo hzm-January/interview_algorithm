@@ -26,8 +26,16 @@ def uniquePaths_4(m: int, n: int) -> int:
     import math
     return math.comb(m+n-2,m-1)
 
+def uniquePaths_5(m: int, n: int) -> int:
+    dp = [1]*n
+    for i in range(1, m):
+        for j in range(1, n):
+            dp[j] = dp[j] + dp[j - 1]
+    return dp[-1]
+
 if __name__ == '__main__':
     # n = uniquePaths(3,7)
     # n = uniquePaths_2(3, 7)
-    n = uniquePaths_4(3, 7)
+    # n = uniquePaths_4(3, 7)
+    n = uniquePaths_5(3, 7)
     print(n)
