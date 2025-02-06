@@ -1,48 +1,39 @@
 import math
 
 
-def search(nums: list[int], target: int) -> int: # 错误算法
-    """
-
-        错误算法
-        错误原因：寻找峰值和寻找谷底都可能存在多个符合答案的值，并不一定能找到旋转数组旋转之前的起始元素的位置。
-    :param nums:
-    :param target:
-    :return:
-    """
+def search(nums: list[int], target: int) -> int:
     n = len(nums)
-
-    # 寻找0
-    def get(idx):
-        if idx == -1:
-            return -math.inf
-        elif idx == n:
-            return math.inf
-        return nums[idx]
-
-    left, right, ans = 0, len(nums) - 1, 0
+    ans = nums.index(min(nums))  # 时间复杂度为O(n)，不满足题目要求
+    # 查找target
+    left, right = ans, ans + n
     while left <= right:
-        mid = left + (right - left) // 2
-        if get(mid - 1) > get(mid) < get(mid + 1):
-            # ans = mid
-            # break
-            return mid
-        if get(mid) > get(mid + 1):
+        mid = (left + (right - left) // 2)
+        if nums[mid % n] == target:
+            return mid % n
+        if nums[mid % n] < target:
             left = mid + 1
         else:
             right = mid - 1
-    print(ans)
-    # 查找target
-    # left, right = ans, ans + n
-    # while left <= right:
-    #     mid = (left + (right - left) // 2)
-    #     if nums[mid % n] == target:
-    #         return mid % n
-    #     if nums[mid % n] < target:
-    #         left = mid + 1
-    #     else:
-    #         right = mid - 1
 
+    return -1
+
+
+def search2(nums: list[int], target: int) -> int:
+    left, right = 0, len(nums) - 1
+    while left <= right:
+        mid = left + (right - left) // 2
+        if nums[mid] == target:
+            return mid
+        if nums[left] <= nums[mid]: # 左半边有序，注意这里的等号
+            if nums[left]<=target<nums[mid]: # target在左半边有序子数组中，注意这里的等号
+                right = mid - 1
+            else: # target不在左半边有序子数组中，所以在右半边找
+                left = mid + 1
+        else: # 右半边有序
+            if nums[mid]<target<=nums[right]: # target 在右半边有序子数组中，注意这里的等号
+                left = mid + 1
+            else: # target 不在右半边有序子数组中，所以在左半边找
+                right = mid - 1
     return -1
 
 
@@ -51,5 +42,6 @@ if __name__ == "__main__":
     # target, nums = 7, [4, 5, 6, 7, 0, 1, 2]
     # target, nums = 0, [1]
     target, nums = 2, [3, 4, 5, 6, 1, 2]
-    ans = search(nums, target)
+    # ans = search(nums, target)
+    ans = search2(nums, target)
     print(ans)
