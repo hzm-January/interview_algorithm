@@ -9,6 +9,7 @@
 # 9.1 二分查找
 
 ## 基础理论
+**适用题目：有序序列中是否存在满足某条件的元素**
 
 易错点1：`while(lef<right)` 还是 `while(lef<=right)`?\
 易错点2：`if(arr\[mid]>target)` 是 `right = mid` 还是 `right = mid-1`?\
@@ -79,6 +80,12 @@ def upperbound(nums: list[int], target: int) -> int:
             left = mid + 1
     return left # 如果数组中所有元素都小于target，最后left=right=n
 ```
+
+特殊情况3：寻找有序序列第一个满足“条件!=C”的元素的位置。\
+使用上面的满足“条件==C”的方法求解index后，再减一。
+
+特殊情况4：递减序列。\
+使用上面的方法，将`nums[mid]>x`修改为`nums[mid]<x`
 
 ## 题目
 
