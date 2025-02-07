@@ -55,6 +55,12 @@ def canPartition_3(nums: list[int]) -> bool: # 这种直接求和的 不用判�
 
 
 def canPartition_4(nums: list[int]) -> bool:
+    """
+        True False 官方写法，不推荐，没有自己写的求数字的方法好。
+        DP数组含义：DP[i][j] 物品0~i，放入容量为j的背包，是否存在物品组合刚好容量和=j。
+    :param stones:
+    :return:
+    """
     if sum(nums) % 2 != 0: return False # 如果所有元素之和为奇数，一定不满足条件
     if len(nums) < 2: return False # 如果元素个数为1或者0，一定不满足条件。
     target = sum(nums) // 2
@@ -62,8 +68,11 @@ def canPartition_4(nums: list[int]) -> bool:
     dp = [[False] * (target + 1) for _ in range(len(nums))]
     # init
     for i in range(len(nums)):
-        dp[i][0] = True
-    dp[0][nums[0]] = True # 没有这一行也可以AC
+        dp[i][0] = True # 容量为0，取0个物品可以使得容量和为0。
+    # 当 i==0 时，只有一个正整数 nums[0] 可以被选取，因此 dp[0][nums[0]]=true。
+    # 只有物品0，则容量为物品0的重量时，可以使得容量和为背包容量。
+    # 这道题目这样写可以AC，但是1049最后石头重量2中，有样例为[91]，这样target=45，数组总共45列，这样写会报错：数组越界。
+    dp[0][nums[0]] = True # 没有这一行也可以AC。但最好写上。
 
     for i in range(1, len(nums)):
         for j in range(1, target + 1):
@@ -89,9 +98,10 @@ def canPartition_5(nums: list[int]) -> bool:
     return dp[-1]
 
 if __name__ == '__main__':
-    nums = [1, 5, 11, 5]
+    # nums = [1, 5, 11, 5]
     # nums = [1, 2, 3, 5]
     # nums = [2, 2, 1, 1]
+    nums = [2,1]
     # ans = canPartition(nums)
     # ans = canPartition_2(nums)
     ans = canPartition_4(nums)

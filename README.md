@@ -195,7 +195,7 @@ def upperbound(nums: list[int], target: int) -> int:
 
 ## 背包问题
 
-### 01背包
+### 01背包[003-26-Remove-Duplicates-from-Sorted-Array.py](01-Top-Interview-150/003-26-Remove-Duplicates-from-Sorted-Array.py)
 #### 理论
 定义：n种物品，每种物品只有一个。
 遍历：二维数组实现的01背包，先遍历背包或者先遍历物品都可以。（因为递推公式由左上方和正上方推出）\
@@ -203,9 +203,49 @@ def upperbound(nums: list[int], target: int) -> int:
 <img src="assets/01beibao.png" alt="assets/01beibao.png" style="width: 400px; height: 300px;" />
 <img src="assets/01beibao_1weidp.png" alt="assets/01beibao_1weidp.png" style="width: 400px; height: 300px;" />
 
+```python
+""" 二维dp数组 """
+def beibao01()->int:
+    wupin, bagweight = [int(x) for x in input().split()]
+    weight = [int(x) for x in input().split()]
+    value = [int(x) for x in input().split()]
+    dp = [[0]*(bagweight+1) for _ in range(wupin)]
+    # dp矩阵，第一行，只有物品0，所以容量大于物品0的背包容量初始化为物品0的价值
+    for i in range(weight[0], bagweight+1): # 第一行初始化
+        dp[0][i] = value[0]
+    for i in range(1, wupin): # 物品从1开始（dp矩阵第二行），因为物品0已经初始化（dp矩阵第一行）。
+        for j in range(1, bagweight+1): # 背包容量从1开始（dp矩阵第二列），因为背包容量为0已经初始化为0，没有价值（dp矩阵第一列）
+            if j>=weight[i]:
+                dp[i][j]=max(dp[i-1][j], dp[i-1][j-weight[i]]+value[i])
+            else:
+                dp[i][j]=dp[i-1][j]
+    return dp[wupin-1][bagweight]
+    
+ans = beibao01()
+print(ans)
+```
+
+```python
+""" 一维dp数值  滚动数组 """
+def beibao01()->int:
+    wupin, bagweight = [int(x) for x in input().split()]
+    weight = [int(x) for x in input().split()]
+    value = [int(x) for x in input().split()]
+    dp = [0]*(bagweight+1)
+    for i in range(wupin): # 从0开始，因为dp没有初始化
+        for j in range(bagweight,weight[i]-1,-1): # 01背包必须倒序
+            dp[j]=max(dp[j], dp[j-weight[i]]+value[i]) #
+ 
+    return dp[bagweight]
+     
+ans = beibao01()
+print(ans)
+```
+
 #### 题目
 LCR101 分割等和子集 (416 partition equal subset sum) - 1 动态规划 O(nxtarget) O(target)
 
+1049 最后一块石头的重量 II (1049 last stone weight II) - 1 动态规划 O(nxtarget) O(target)
 
 ### 完全背包
 
