@@ -214,7 +214,7 @@ def myPow(x: float, n: int) -> float:
 
 ### 01背包[003-26-Remove-Duplicates-from-Sorted-Array.py](01-Top-Interview-150/003-26-Remove-Duplicates-from-Sorted-Array.py)
 #### 理论
-定义：n种物品，每种物品只有一个。
+定义：n种物品，每种物品只能使用一次。
 遍历：二维数组实现的01背包，先遍历背包或者先遍历物品都可以。（因为递推公式由左上方和正上方推出）\
 
 <img src="assets/01beibao.png" alt="assets/01beibao.png" style="width: 400px; height: 300px;" />
@@ -230,6 +230,7 @@ def beibao01()->int:
     # dp矩阵，第一行，只有物品0，所以容量大于物品0的背包容量初始化为物品0的价值
     for i in range(weight[0], bagweight+1): # 第一行初始化
         dp[0][i] = value[0]
+    # 二维dp数组的01背包写法：先遍历物品再遍历背包，或者，先遍历背包再遍历物品，都可以。
     for i in range(1, wupin): # 物品从1开始（dp矩阵第二行），因为物品0已经初始化（dp矩阵第一行）。
         for j in range(1, bagweight+1): # 背包容量从1开始（dp矩阵第二列），因为背包容量为0已经初始化为0，没有价值（dp矩阵第一列）
             if j>=weight[i]:
@@ -249,8 +250,9 @@ def beibao01()->int:
     weight = [int(x) for x in input().split()]
     value = [int(x) for x in input().split()]
     dp = [0]*(bagweight+1)
+    # 一维dp数组的01背包写法：先遍历物品，再遍历背包，顺序不能颠倒
     for i in range(wupin): # 从0开始，因为dp没有初始化
-        for j in range(bagweight,weight[i]-1,-1): # 01背包必须倒序
+        for j in range(bagweight,weight[i]-1,-1): # 01背包一维dp数组写法：背包遍历必须倒序，防止同一物品被使用多次
             dp[j]=max(dp[j], dp[j-weight[i]]+value[i]) #
  
     return dp[bagweight]
@@ -260,13 +262,89 @@ print(ans)
 ```
 
 #### 题目
-LCR101 分割等和子集 (416 partition equal subset sum) - 1 动态规划 O(nxtarget) O(target)
 
-1049 最后一块石头的重量 II (1049 last stone weight II) - 1 动态规划 O(nxtarget) O(target)
+<u>纯01背包</u> \
+注：背包容量固定，求装满容器的最大价值。
+
+<u>LeetCode LCR101 分割等和子集 (416 partition equal subset sum) - 1 动态规划 O(nxtarget) O(target)</u> \
+注：背包容量固定，求容器是否能被装满。
+
+
+<u>LeetCode 1049 最后一块石头的重量 II (1049 last stone weight II) - 1 动态规划 O(nxtarget) O(target)</u> \
+注：背包容量固定，求容器最多能装多少容量。
+
+<u>LeetCode LCR 0102 目标和 (494 target sum) - 1 动态规划 O(nxtarget) O(target)</u> \
+注：背包容量固定，求容器装满有多少种方法。
+
+<u>LeetCode 0474 一和零 (0474 ones and zeros) - 1 动态规划</u> \
+注：背包容量固定，求容器装满最多能装多少个物品。\
+注：背包容量是两个维度，0的个数和1的个数。对比传统01背包问题中背包容量只有一个维度。对比完全背包问题中背包容量只有一个维度，物品数量不一样。\
+注：背包使用二维数组表示，但不是传统01背包中的二维dp数组，写法仍然按照传统01背包中的滚动数组的写法：先正序遍历物品再倒序遍历背包（遍历背包是两层循环）
+
 
 ### 完全背包
 
-n种物品，每种物品有无限个
+#### 理论
+n种物品，每种物品可以使用多次
+
+<img src="assets/wanquanbeibao.png" alt="assets/wanquanbeibao.png" style="width: 400px; height: 250px;" />
+
+纯完全01背包问题：遍历顺序先物品后背包，或者，先背包后物品，都可以。
+
+<img src="assets/wanquanbeibao_2.png" alt="assets/wanquanbeibao_2.png" style="width: 400px; height: 250px;" />
+
+先遍历物品后遍历背包：组合（只有1,2，不可能有2,1，因为物品是从0到n依次遍历）
+
+```python
+def change(target: int, items: list[int]) -> int:
+    """
+        完全背包 动态规划 先遍历物品后遍历背包
+    """
+    n = len(items)
+    dp = [0] * (target + 1)
+    dp[0] = 1
+    # 在每一轮物品 i 的遍历中，更新所有可能的背包容量 j，确保每个物品可以被多次选择。
+    for i in range(n):  # 先遍历物品
+        for j in range(items[i], target + 1):  # 后遍历背包
+            dp[j] = dp[j] + dp[j - items[i]]
+        print(i, dp)
+    return dp[-1]
+```
+
+先遍历背包后遍历物品：排列（既有1,2也有2,1，因为每轮迭代都会遍历所有物品）
+
+在先遍历背包后遍历物品的代码中，由于每次对容量 j 都尝试所有物品，因此会统计所有可能的排列。
+在代码中，$dp[j] = max(dp[j], dp[j - weights[i]] + values[i])$ 会多次更新 $dp[j]$，
+每次更新都基于不同的物品选择顺序。 这种更新方式会导致 $dp[j]$ 的值受到物品选择顺序的影响，从而得到排列数。
+
+例如：
+对于容量 j = 3 \
+尝试放入物品 A：$dp[3] = max(dp[3], dp[2] + 1) = 3$ \
+尝试放入物品 B：$dp[3] = max(dp[3], dp[1] + 2) = 3$ \
+结果：$dp[3] = 3$ \
+在这个过程中，$dp[3]$ 的值是通过多次尝试不同的物品选择顺序得到的，因此最终结果是排列数。 \
+
+```python
+def change2(amount: int, items: list[int]) -> int:
+    """
+        完全背包 动态规划 先遍历背包后遍历物品
+    """
+    n = len(items)
+    dp = [0] * (amount + 1)
+    dp[0] = 1
+    # 在每一轮背包容量 j 的遍历中，尝试放入每一个物品 i，更新 dp[j]
+    for j in range(amount + 1):  # 先遍历背包
+        for i in range(n):  # 后遍历物品
+            if j >= items[i]:
+                
+                dp[j] = dp[j] + dp[j - items[i]]
+            # print(' ', i, dp)
+        print(j, dp)
+    return dp[-1]
+```
+
+#### 题目
+
 
 ### 多重背包
 
