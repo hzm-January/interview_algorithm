@@ -179,6 +179,23 @@ def upperbound(nums: list[int], target: int) -> int:
 0033 搜索旋转排序数组\
 0034 在排序数组中查找元素的第一个和最后一个位置\
 
+# 快速幂
+## 理论
+```python
+def myPow(x: float, n: int) -> float:
+        if x==0.0:return 0.0 # 处理底数为0的情况
+        if n < 0: x, n = 1 / x, -n
+        ret = 1
+        while n:
+            if n&1: ret = ret * x # 奇数处理 x^5=x(x^2)^2
+            x = x * x # 偶数翻倍
+            n = n>>1 # 除以2
+        return ret
+```
+## 题目
+0050 pow(x,n) - 1 快速幂
+
+
 
 # 9.9 动态规划
 
