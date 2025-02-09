@@ -7,19 +7,24 @@ def stitch_images(img1, img2):
     gray1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
     gray2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
 
-    # Detect ORB keypoints and descriptors
-    orb = cv2.ORB_create()
-    kp1, des1 = orb.detectAndCompute(gray1, None)
-    kp2, des2 = orb.detectAndCompute(gray2, None)
+    # Detect SIFT keypoints and descriptors
+    sift = cv2.SIFT_create()
+    kp1, des1 = sift.detectAndCompute(gray1, None)
+    kp2, des2 = sift.detectAndCompute(gray2, None)
 
-    # Match features using BFMatcher
-    matcher = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
-    matches = matcher.match(des1, des2)
-    matches = sorted(matches, key=lambda x: x.distance)
+    # Match features using FLANN-based matcher
+    index_params = dict(algorithm=1, trees=5)  # FLANN KDTree index
+    search_params = dict(checks=50)  # Higher means more accurate matches
+    matcher = cv2.FlannBasedMatcher(index_params, search_params)
+    matches = matcher.knnMatch(des1, des2, k=2)
+
+    # Apply Lowe's ratio test
+    good_matches = [m for m, n in matches if m.distance < 0.7 * n.distance]
 
     # Draw matches
-    match_img = cv2.drawMatches(img1, kp1, img2, kp2, matches[:50], None,
+    match_img = cv2.drawMatches(img1, kp1, img2, kp2, good_matches, None,
                                 flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+
     scale_factor = 0.5  # Scale down the image for better visibility
     match_img_resized = cv2.resize(match_img,
                                    (int(match_img.shape[1] * scale_factor), int(match_img.shape[0] * scale_factor)))
@@ -28,8 +33,8 @@ def stitch_images(img1, img2):
     cv2.destroyAllWindows()
 
     # Extract matched points
-    pts1 = np.float32([kp1[m.queryIdx].pt for m in matches]).reshape(-1, 1, 2)
-    pts2 = np.float32([kp2[m.trainIdx].pt for m in matches]).reshape(-1, 1, 2)
+    pts1 = np.float32([kp1[m.queryIdx].pt for m in good_matches]).reshape(-1, 1, 2)
+    pts2 = np.float32([kp2[m.trainIdx].pt for m in good_matches]).reshape(-1, 1, 2)
 
     # Find homography matrix
     H, _ = cv2.findHomography(pts2, pts1, cv2.RANSAC, 5.0)
@@ -85,18 +90,20 @@ def process_license_plate_images(img1_path, img2_path, extract_plate=False):
     # Step 1: Stitch images
     stitched_image = stitch_images(img1, img2)
 
-    # Step 2: Correct stitched image
-    corrected_image = correct_image(stitched_image)
+    # # Step 2: Correct stitched image
+    # corrected_image = correct_image(stitched_image)
+    #
+    # # Step 3 (Optional): Extract license plate
+    # if extract_plate:
+    #     license_plate = extract_license_plate(corrected_image)
+    #     if license_plate is not None:
+    #         return license_plate
+    #     else:
+    #         print("License plate not detected.")
+    #
+    # return corrected_image
 
-    # Step 3 (Optional): Extract license plate
-    if extract_plate:
-        license_plate = extract_license_plate(corrected_image)
-        if license_plate is not None:
-            return license_plate
-        else:
-            print("License plate not detected.")
-
-    return corrected_image
+    return stitched_image
 
 # Example usage
 if __name__ == "__main__":
@@ -108,7 +115,10 @@ if __name__ == "__main__":
 
     # Show and save results
     if result is not None:
+        scale_factor = 0.5  # Scale down the image for better visibility
+        result = cv2.resize(result,
+                                       (int(result.shape[1] * scale_factor), int(result.shape[0] * scale_factor)))
         cv2.imshow("Result", result)
-        cv2.imwrite("output.jpg", result)
+        # cv2.imwrite("output.jpg", result)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
