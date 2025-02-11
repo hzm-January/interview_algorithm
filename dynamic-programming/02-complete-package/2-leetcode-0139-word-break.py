@@ -21,7 +21,7 @@
 def wordBreak(s: str, wordDict: list[str]) -> bool: # 错误代码
 
     """
-        错误代码，valid函数中len(s_j)==len(s)判断逻辑中，不能使用replace，因为有很多错误。
+        错误代码：valid函数中len(s_j)==len(s)判断逻辑中，不能使用replace，因为有很多错误。
 
         动态规划 完全背包
         题意：s 是背包，wordDict 是物品集合。求物品是否可以将背包装满。
@@ -45,15 +45,31 @@ def wordBreak(s: str, wordDict: list[str]) -> bool: # 错误代码
                 tmp_s = tmp_s.replace(subs, "_"*len(subs), 1)
 
         if len(s_j)==len(s):
-            tmp_s = s
-            # 验证是否可以组成目标字符串
-            for subs in tmp:
-                # tmp_s = tmp_s.replace(subs,"",1) # 不能用""，否则测试样例 s='ccbb' ['cb','bc']不能通过，因为['cb','cb']这种情况是不满足条件的，但是replace两次后为空字符串，返回True（错误）
-                tmp_s = tmp_s.replace(subs,"_"*len(subs),1)
-            # if tmp_s!='':
-            if tmp_s!='_'*len(s):
-                return False
+            ans = valid_path(tmp)
+            if ''.join(ans)!=s: return False
         return True
+
+    def valid_path(tmp):
+        path, ans = [], []
+        used = [0] * len(s)
+
+        def backtracking(tmp):
+            if len(''.join(path)) == len(s):
+                if ''.join(path) == s:
+                    ans.append(path.copy())
+                    tmp = path.copy()
+                    return
+            for i in range(0, len(tmp)):
+                if used[i] == 1: continue
+                path.append(tmp[i])
+                used[i] = 1
+                backtracking(tmp)
+                used[i] = 0
+                path.pop()
+
+        backtracking(tmp)
+        return ans[0] if ans else []
+
     n, m = len(wordDict), len(s)
     dp = [[] for _ in range(m+1)] # dp[i]是一个可以构成
     for i in range(n):  # 先遍历物品
@@ -64,13 +80,17 @@ def wordBreak(s: str, wordDict: list[str]) -> bool: # 错误代码
             if valid(tmp) and len(tmp)>len(dp[j]):
                 dp[j] = tmp
             # print(' ', dp)
-        # print(i, dp)
+        print(i, dp)
     return len(''.join(dp[-1])) == len(s)
+
+
 
 if __name__ == '__main__':
     # s, wordDict = "leetcode", ["leet", "code"]
     # s, wordDict = "applepenapple", ["apple", "pen"]
     # s, wordDict = "catsandog", ["cats", "dog", "sand", "and", "cat"]
-    s, wordDict = "ccbb", ["bc", "cb"]
+    # s, wordDict = "ccbb", ["bc", "cb"]
+    # s, wordDict = "ccaccc", ["cc","ac"]
+    s,wordDict = "catscatdog", ["cat","cats","dog"]
     ans = wordBreak(s, wordDict)
     print(ans)
