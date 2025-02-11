@@ -1,6 +1,6 @@
 def combinationSum2(candidates: list[int], target: int) -> list[list[int]]:
     """
-        回溯 - used数组去重
+        回溯 - 树层去重 - used数组去重
     :param candidates:
     :param target:
     :return:
@@ -16,7 +16,7 @@ def combinationSum2(candidates: list[int], target: int) -> list[list[int]]:
             return
         i = cur
         while i < len(candidates) and sum + candidates[i] <= target:
-            if i > 0 and candidates[i] == candidates[i - 1] and (not used[i - 1]):
+            if i > 0 and candidates[i] == candidates[i - 1] and (not used[i - 1]): # 关键
                 i += 1
                 continue
             path.append(candidates[i])
@@ -29,13 +29,13 @@ def combinationSum2(candidates: list[int], target: int) -> list[list[int]]:
             i += 1
 
 
-    candidates.sort()  # 该题目必须排序，因为有重复数组
+    candidates.sort()  # 该题目必须排序，因为有重复数字
     backtrack(0, 0)
     return ans
 
 def combinationSum2_2(candidates: list[int], target: int) -> list[list[int]]:
     """
-        回溯 - used数组去重
+        回溯 - 树层去重 - startIndex去重
     :param candidates:
     :param target:
     :return:

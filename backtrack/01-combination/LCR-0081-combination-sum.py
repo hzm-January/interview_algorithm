@@ -26,7 +26,7 @@ def combinationSum2(candidates: list[int], target: int) -> list[list[int]]:
             tmp = path.copy()
             ans.append(tmp)
         i = cur
-        while i < len(candidates) and sum + candidates[i] <= target:
+        while i < len(candidates) and sum + candidates[i] <= target: # 剪枝2：
             path.append(candidates[i])
             sum += candidates[i]
             backstacking(i, sum)

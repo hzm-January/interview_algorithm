@@ -251,7 +251,124 @@ void backtracking(参数列表): // 参数一般事先难确定，需要什么�
 回溯-去重
 
 树层去重：方法一：used数组去重； 方法二：startIndex去重\
-树枝去重
+树枝去重：方法：used数组去重。
+结果去重
+
+```python
+""" 无重复数字数组 全排列 """
+def permute(nums: list[int]) -> list[list[int]]:
+    path, ans = [], []
+    used = [0] * len(nums)
+
+    def backtrack():
+        if len(path) == len(nums):
+            tmp = path.copy()
+            ans.append(tmp)
+            return
+        for i in range(len(nums)):
+            if used[i]: continue
+            path.append(nums[i])
+            used[i] = 1
+            backtrack()
+            used[i] = 0
+            path.pop()
+
+    backtrack()
+    return ans
+```
+
+```python
+def solve(k: int, n: int) -> list[list[int]]:
+    """
+        剪枝
+    """
+    path, ans = [], []
+
+    def backtracking(cur, sum):
+        if len(path) == k or sum > n:  # 元素个数够了就退出，剪枝1：sum>n退出
+            if sum == n:
+                tmp = path.copy()
+                ans.append(tmp)
+            return
+        for i in range(cur, n - (k - len(path)) + 1 + 1): # 剪枝2：单层搜索剪枝
+            path.append(i)
+            sum += i
+            backtracking(i + 1, sum)
+            path.pop()
+            sum -= i
+        return
+
+    backtracking(1, 0)
+    return ans
+```
+
+```python
+def combinationSum2(candidates: list[int], target: int) -> list[list[int]]:
+    """
+        回溯 - 树层去重 - used数组去重
+    :param candidates:
+    :param target:
+    :return:
+    """
+    path, ans = [], []
+    used = [False] * len(candidates)
+
+    def backtrack(cur, sum):
+        if sum > target: return
+        if sum == target:
+            tmp = path.copy()
+            ans.append(tmp)
+            return
+        i = cur
+        while i < len(candidates) and sum + candidates[i] <= target:
+            if i > 0 and candidates[i] == candidates[i - 1] and (not used[i - 1]): # 关键
+                i += 1
+                continue
+            path.append(candidates[i])
+            sum += candidates[i]
+            used[i] = True
+            backtrack(i + 1, sum)  # 这里是从i+1开始，用过的不能再用
+            used[i] = False
+            sum -= candidates[i]
+            path.pop()
+            i += 1
+
+
+    candidates.sort()  # 该题目必须排序，因为有重复数字
+    backtrack(0, 0)
+    return ans
+```
+
+```python
+def combinationSum2_2(candidates: list[int], target: int) -> list[list[int]]:
+    """
+        回溯 - 树层去重 - startindex去重
+    """
+    path, ans = [], []
+
+    def backtrack(cur, sum):
+        if sum > target: return
+        if sum == target:
+            tmp = path.copy()
+            ans.append(tmp)
+            return
+        i = cur
+        while i < len(candidates) and sum + candidates[i] <= target:
+            if i > cur and candidates[i] == candidates[i - 1]: # 关键
+                i += 1
+                continue
+            path.append(candidates[i])
+            sum += candidates[i]
+            backtrack(i + 1, sum)  # 这里是从i+1开始，用过的不能再用
+            sum -= candidates[i]
+            path.pop()
+            i += 1
+
+    candidates.sort()  # 该题目必须排序，因为有重复数字
+    backtrack(0, 0)
+    return ans
+
+```
 
 ## 题目
 ### 组合问题
@@ -271,6 +388,13 @@ LCR 0082 组合总和2 - 1 回溯\
 
 <img src="assets/huisu-quchong.png" alt="assets/huisu-quchong.png" style="width: 400px; height: 300px;" />
 
+0046 全排列\
+注：树枝去重。方法：used数组
+
+0022 括号生成 - <font color='red'>1 暴力法</font> 2 回溯法 <font color='red'>3 按括号序列的长度递归</font> \
+注：回溯与传统回溯写法不同。字符串结果去重。
+
+
 # 9.9 动态规划
 
 **五个步骤：** 1 DP数组的含义；2 递推公式；3 DP数组的初始化；4 DP数组遍历顺序；5 打印DP数组
@@ -286,7 +410,7 @@ LCR 0082 组合总和2 - 1 回溯\
 
 ## 背包问题
 
-### 01背包[003-26-Remove-Duplicates-from-Sorted-Array.py](01-Top-Interview-150/003-26-Remove-Duplicates-from-Sorted-Array.py)
+### 01背包[003-26-Remove-Duplicates-from-Sorted-Array.py](01-Top-Interview-150/01-array-string/003-26-Remove-Duplicates-from-Sorted-Array.py)
 #### 理论
 定义：n种物品，每种物品只能使用一次。
 遍历：二维数组实现的01背包，先遍历背包或者先遍历物品都可以。（因为递推公式由左上方和正上方推出）\
@@ -418,6 +542,8 @@ def change2(amount: int, items: list[int]) -> int:
 ```
 
 #### 题目
+
+0377 组合总和4 - 1 回溯
 
 
 ### 多重背包
