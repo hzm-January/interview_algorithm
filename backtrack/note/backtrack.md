@@ -73,7 +73,8 @@ def permute(nums: list[int]) -> list[list[int]]:
 
 为什么是`n-(k-path.size)+1`? - 例如：$4-(3-0)+1$，总共4个元素，找出3个元素的组合个数，现在已经添加了0个元素，则单层搜索最大子节点是$2$，
 即$3$子树($[3,4]$)，和$4$子树($[4]$)一定不满足3个元素这个条件。
-如果不加$1$，单层搜索最大子节点是$1$，那么$[2,3,4]$这个满足条件的答案将被剪枝。
+如果不加$1$，单层搜索最大子节点是$1$，那么$[2,3,4]$这个满足条件的答案将被剪枝。\
+注：如果回溯初始从$1$开始，可访问上界为`n-(k-path.size)+1`；如果回溯初始从$0$开始，可访问上界为`n-(k-path.size)`
 
 <img src="assets/huisu-jianzhi.png" alt="assets/huisu-jianzhi.png" style="width: 400px; height: 250px;" />
 
@@ -81,6 +82,7 @@ def permute(nums: list[int]) -> list[list[int]]:
 ```python
 def solve(k: int, n: int) -> list[list[int]]:
     """
+        题目：组合总和3,
         回溯 剪枝
     """
     path, ans = [], []
@@ -91,7 +93,9 @@ def solve(k: int, n: int) -> list[list[int]]:
                 tmp = path.copy()
                 ans.append(tmp)
             return
-        for i in range(cur, n - (k - len(path)) + 1 + 1): # 剪枝2：单层搜索剪枝
+        # 因为回溯初始从1开始，可访问上界必须是n-(k-len(path))+1
+        # 如果回溯初始从0开始，可访问上界必须是n-(k-len(path))
+        for i in range(cur, 9 - (k - len(path)) + 1 + 1): # 剪枝2：单层搜索剪枝
             path.append(i)
             sum += i
             backtracking(i + 1, sum)
@@ -211,6 +215,24 @@ LCR 0082 组合总和2 - 1 回溯\
 注：回溯与传统回溯写法不同。字符串结果去重。
 
 ### 2.2 字符串切割
+#### 2.1 理论
+单层搜索逻辑中确定切割区间$[cur, i+1]$。
+
 <img src="assets/timu_fengehuiwenzichuan.png" alt="assets/timu_fengehuiwenzichuan.png" style="width: 350px; height: 300px;" />
 
+#### 2.2 相关题目
+LCR 0086 分割回文子串\
+注：可以使用动态规划预处理回文子串判断逻辑，`dp[i][j]=(dp[i+1][j-1] and s[i]==s[j])`。
+注：如果切割子串不满足条件，continue。例如：a|ab|a，因为ab不是回文子串，所以跳过继续执行后面的逻辑，再切割a|aba|，符合要求。\
 
+LCR 0087 复原IP地址\
+注：如果切割子串不满足条件，直接return。例如：0|1111|11，因为1111不符合要求，则后面没必要切割了，再切割是0|11111|1，一定不符合要求
+
+### 2.3 子集
+#### 2.3.1 理论
+与字符串切割相同
+#### 2.3.2 相关题目
+LCR 0079 子集 - 1 回溯
+
+0090 子集2 - 1 回溯 \
+注：有重复元素，树层去重：使用used数组，或者startIndex树层去重。

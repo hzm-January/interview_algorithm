@@ -31,10 +31,10 @@ def change2(amount: int, coins: list[int]) -> int:
     for j in range(amount + 1): # 先遍历背包
         for i in range(n): # 后遍历物品
             if j>=coins[i]:
-                print(j, j - coins[i])
+                # print(j, j - coins[i])
                 dp[j] = dp[j] + dp[j - coins[i]]
             # print(' ', i, dp)
-        # print(j, dp)
+        print(j, dp)
     return dp[-1]
 
 
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     coins, amount = [1, 2, 5], 5
     # coins, amount = [2], 3
     # coins, amount = [10], 10
-    ans = change(amount, coins)
-    print(ans)
+    # ans = change(amount, coins)
+    # print(ans)
     ans = change2(amount, coins)
     print(ans)

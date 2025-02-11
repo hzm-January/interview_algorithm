@@ -31,6 +31,7 @@ def combinationSum3_2(k: int, n: int) -> list[list[int]]:
                 tmp = path.copy()
                 ans.append(tmp)
             return
+        # 因为回溯初始从1开始，所以这里必须是n-(k-len(path))+1可以访问到
         for i in range(cur, 9 - (k - len(path)) + 1 + 1): # 剪枝2：单层搜索剪枝
             path.append(i)
             sum += i
