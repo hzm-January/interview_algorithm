@@ -160,3 +160,17 @@ def postorderTraversal3(root: TreeNode) -> list[int]:
 #### 1.1.4.2 广度优先遍历
 层序遍历：队列+迭代法
 
+## 1.2 二叉树相关题目
+### 1.2.1 二叉树前中后序遍历
+leetcode 0144 二叉树前序遍历
+
+leetcode 0094 二叉树中序遍历
+
+leetcode 0145 二叉树后序遍历
+### 1.2.2 二叉树层序遍历
+leetcode 0102 二叉树的层序遍历
+
+leetcode 0107 二叉树的层序遍历2
+
+
+
