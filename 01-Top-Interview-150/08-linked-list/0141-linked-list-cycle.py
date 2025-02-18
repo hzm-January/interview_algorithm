@@ -17,6 +17,15 @@ def hasCycle(head: Optional[ListNode]) -> bool:
         q = q.next.next
     return True
 
-if __name__ == "__main__":
+def hasCycle2(head: Optional[ListNode]) -> bool:
+    if not head or not head.next: return False
+    seen = set()
+    p = head
+    while p:
+        if p in seen: return True
+        seen.add(p)
+        p = p.next
+    return False
+
 
 
