@@ -4,7 +4,7 @@ from typing import List
 class Solution:
     def wiggleMaxLength(self, nums: List[int]) -> int:
         """
-            贪心  求局部峰值/谷底
+            贪心 求局部峰值/谷底
             注1：处理首尾
             注2：处理平坡
             注3：同一递进方向中有平坡[1,2,2,2,3,3]
@@ -24,27 +24,27 @@ class Solution:
                 prev = nums[i] - nums[i - 1]  # update pre diff
         return cnt
 
-    def wiggleMaxLength2(self, nums: List[int]) -> int:
-        """
-            错误代码：这个写法 有两个测试点没通过
-            动态规划
-            1 dp数组含义：以 nums[i] 为结尾的摆动子序列最大长度为 dp[i]
-            2 递推公式：如果是峰值或谷底：dp[i] = dp[i - 1] + 1；如果不是dp[i]=dp[i - 1]
-            3 dp数值初始化：dp[0]=1
-            4 遍历顺序：从前到后
-            5 打印
-        """
-        n = len(nums)
-        if n < 2: return n
-        dp = [0] * n
-        dp[0] = 0 if nums[0] == nums[1] else 1
-        for i in range(1, n - 1):
-            if (nums[i - 1] <= nums[i] and nums[i] > nums[i + 1]) or (nums[i - 1] >= nums[i] and nums[i] < nums[i + 1]):
-                dp[i] = dp[i - 1] + 1
-            else:
-                dp[i] = dp[i - 1]
-            print(dp)
-        return dp[-2] + 1
+    # def wiggleMaxLength2(self, nums: List[int]) -> int:
+    #     """
+    #         错误代码：这个写法 有两个测试点没通过
+    #         动态规划
+    #         1 dp数组含义：以 nums[i] 为结尾的摆动子序列最大长度为 dp[i]
+    #         2 递推公式：如果是峰值或谷底：dp[i] = dp[i - 1] + 1；如果不是dp[i]=dp[i - 1]
+    #         3 dp数值初始化：dp[0]=1
+    #         4 遍历顺序：从前到后
+    #         5 打印
+    #     """
+    #     n = len(nums)
+    #     if n < 2: return n
+    #     dp = [0] * n
+    #     dp[0] = 0 if nums[0] == nums[1] else 1
+    #     for i in range(1, n - 1):
+    #         if (nums[i - 1] <= nums[i] and nums[i] > nums[i + 1]) or (nums[i - 1] >= nums[i] and nums[i] < nums[i + 1]):
+    #             dp[i] = dp[i - 1] + 1
+    #         else:
+    #             dp[i] = dp[i - 1]
+    #         print(dp)
+    #     return dp[-2] + 1
 
     def wiggleMaxLength3(self, nums: List[int]) -> int:
         """
