@@ -8,6 +8,22 @@
 >       [j, i] # 左闭右闭 
 > ```
 
+```python
+""" 长度最小的子数组 """
+def minSubArrayLen2(self, target: int, nums: List[int]) -> int:
+    """ 滑动窗口 O(n) O(1) """
+    n = len(nums)
+    min_len = n + 1
+    i = 0
+    total = 0
+    for j in range(n):
+        total += nums[j]
+        while total >= target:
+            min_len = min(min_len, j - i + 1)
+            total -= nums[i]
+            i += 1
+    return min_len if min_len != n + 1 else 0
+```
 
 
 # 滑动窗口-相关题目
