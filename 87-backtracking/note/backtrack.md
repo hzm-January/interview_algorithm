@@ -43,6 +43,20 @@ void backtracking(参数列表): // 参数一般事先难确定，需要什么�
     return    
 ```
 
+技巧1：数值变量的回溯可以写在调用backtracking的参数列表中。
+```python
+sum+=i # 更新
+backtracking(i+1)
+sum-=i # 回溯
+
+# 可以简写为
+backtracking(i+1,sum+i) # 这意味着当前函数中的sum值没有改变，省略了更新和回溯的操作
+```
+
+技巧2：使用used数组标记已经访问过的节点。详见：[回溯-去重](#15-回溯-去重)
+
+
+
 ### 1.3.1 全排列
 ```python
 """ 无重复数字数组 全排列 """
@@ -100,8 +114,35 @@ def solve(k: int, n: int) -> list[list[int]]:
             path.append(i)
             sum += i
             backtracking(i + 1, sum)
-            path.pop()
             sum -= i
+            path.pop()
+        return
+
+    backtracking(1, 0)
+    return ans
+```
+
+```python
+def solve(k: int, n: int) -> list[list[int]]:
+    """
+        题目：组合总和3,
+        回溯 剪枝 
+        ***sum回溯写法优化***
+    """
+    path, ans = [], []
+
+    def backtracking(cur, sum):
+        if len(path) == k or sum > n:  # 元素个数够了就退出，剪枝1：sum>n退出
+            if sum == n:
+                tmp = path.copy()
+                ans.append(tmp)
+            return
+        # 因为回溯初始从1开始，可访问上界必须是n-(k-len(path))+1
+        # 如果回溯初始从0开始，可访问上界必须是n-(k-len(path))
+        for i in range(cur, 9 - (k - len(path)) + 1 + 1): # 剪枝2：单层搜索剪枝
+            path.append(i)
+            backtracking(i + 1, sum+i) # 注意：这里将sum的回溯整合到函数参数中
+            path.pop()
         return
 
     backtracking(1, 0)
