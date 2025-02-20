@@ -30,6 +30,7 @@ class Solution:
 
     def minSubArrayLen3(self, target: int, nums: List[int]) -> int:
         """ 前缀和 + 二分查找 """
+
         def lower_bound(sums, t):
             # 二分查找
             l, r = 0, n - 1  # 左闭右闭
@@ -38,25 +39,53 @@ class Solution:
                 if sums[mid] < t:
                     l = mid + 1
                 else:
-                    r = mid - 1 # 左闭右闭
-            return l if sums[l]>target else -1
+                    r = mid - 1  # 左闭右闭
+            return l if sums[l] >= t else -1
 
         # 前缀和
         n = len(nums)
         sum = [0] * (n + 1)
         sum[0] = nums[0]
-        ans = n+n
+        ans = n + n
         for i in range(1, n + 1):
-            sum[i] = sum[i - 1] + nums[i-1]
+            sum[i] = sum[i - 1] + nums[i - 1]  # sum[i]为nums[0]到nums[i-1]的元素和
 
+        for i in range(1, n + 1):  # 遍历前缀和
+            _target = target + sum[i - 1]  #
+            bound = lower_bound(sum, _target)
+            if bound >= 0:
+                ans = min(ans, bound - i + 1)
+        return ans if ans != n + n else 0
+
+    def minSubArrayLen4(self, target: int, nums: List[int]) -> int:
+        """
+            前缀和 + 二分查找
+            优化前缀和生成代码
+         """
+        def lower_bound(sums, t):
+            # 二分查找
+            l, r = 0, n - 1  # 左闭右闭
+            while l <= r:
+                mid = l + (r - l) // 2
+                if sums[mid] < t:
+                    l = mid + 1
+                else:
+                    r = mid - 1  # 左闭右闭
+            return l if sums[l] >= t else -1
+
+        # 前缀和
+        n = len(nums)
+        sum = [0]
+        ans = n + 1
         for i in range(1, n + 1):
-            _target = target + sum[i-1]
-            bound = lower_bound(sum, target)
-            if bound <0:
-                bound = -bound-1
-            if bound <= n:
-                ans = min(ans, bound-i+1)
-        return ans if ans!=n+n else 0
+            sum.append(sum[-1] + nums[i - 1])  # sum[i]为nums[0]到nums[i-1]的元素和
+
+        for i in range(1, n + 1):  # 遍历前缀和
+            _target = target + sum[i - 1]  #
+            bound = lower_bound(sum, _target)
+            if bound >= 0:
+                ans = min(ans, bound - i + 1)
+        return ans if ans != n + 1 else 0
 
 
 if __name__ == '__main__':
@@ -67,3 +96,4 @@ if __name__ == '__main__':
     s = Solution()
     print(s.minSubArrayLen(t, nums))
     print(s.minSubArrayLen2(t, nums))
+    #
