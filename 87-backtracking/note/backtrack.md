@@ -155,7 +155,9 @@ def solve(k: int, n: int) -> list[list[int]]:
 树枝去重：方法：used数组去重。
 结果去重
 
-
+### 1.5.1 树层去重
+1 排序  
+2 
 ```python
 def combinationSum2(candidates: list[int], target: int) -> list[list[int]]:
     """
@@ -175,6 +177,7 @@ def combinationSum2(candidates: list[int], target: int) -> list[list[int]]:
             return
         i = cur
         while i < len(candidates) and sum + candidates[i] <= target:
+            # andidates[i]==candidates[i - 1] 和 not used[i-1] 共同保证了多个相同值元素中，第一个一定会被访问，其余都不会被访问。
             if i > 0 and candidates[i] == candidates[i - 1] and (not used[i - 1]): # 关键
                 i += 1
                 continue
@@ -196,7 +199,7 @@ def combinationSum2(candidates: list[int], target: int) -> list[list[int]]:
 ```python
 def combinationSum2_2(candidates: list[int], target: int) -> list[list[int]]:
     """
-        回溯 - 树层去重 - startindex去重
+        回溯 - 树层去重 - startindex去重 该代码中cur即是startindex 
     """
     path, ans = [], []
 
@@ -208,7 +211,8 @@ def combinationSum2_2(candidates: list[int], target: int) -> list[list[int]]:
             return
         i = cur
         while i < len(candidates) and sum + candidates[i] <= target:
-            if i > cur and candidates[i] == candidates[i - 1]: # 关键
+            # candidates[i]==candidates[i - 1] 和 i>cur 共同保证了多个相同值元素中，第一个一定会被访问，其余都不会被访问。
+            if i > cur and candidates[i] == candidates[i - 1]: # 关键 注意：这里是i>cur与使用used数组树形去重中的i>0不同
                 i += 1
                 continue
             path.append(candidates[i])

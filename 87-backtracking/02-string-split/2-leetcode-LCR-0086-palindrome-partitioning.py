@@ -70,11 +70,9 @@ def partition3(s: str) -> list[list[str]]:
     dp = [[True] * len(s) for _ in range(len(s))]  # 二维dp数组
     # 先更新列，后更新行，从左上到右下
     for j in range(1, len(s)): # dp[i][0]=True，第一列j=0肯定小于等于每一行的i，因为行数和列数相等
-        for i in range(len(s)-1): # dp[len(s)-1][j]=True，最后一行i=len(s)-1肯定大于等于每一列的j，因为行数和列数相等
-            if i >= j:
-                dp[i][j] = True
-            else:
-                dp[i][j] = (dp[i + 1][j - 1] and s[i] == s[j])
+        for i in range(j): # dp[len(s)-1][j]=True，最后一行i=len(s)-1肯定大于等于每一列的j，因为行数和列数相等
+            dp[i][j] = (dp[i + 1][j - 1] and s[i] == s[j])
+
     import numpy
     print(numpy.array(dp))
 
