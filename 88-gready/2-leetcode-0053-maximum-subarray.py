@@ -35,9 +35,19 @@ class Solution:
         dp = [0] * n
         dp[1] = nums[0]
         max_sum = nums[0]
-        for i in range(1, n):
+        for i in range(1, n): # 注意从1开始
             dp[i] = max(dp[i - 1] + nums[i], nums[i])
             max_sum = max(max_sum, dp[i])
+        return max_sum
+
+    def maxSubArray4(self, nums: List[int]) -> int:
+        """ 动态规划 压缩状态矩阵 """
+        n = len(nums)
+        cur_sum = nums[0]
+        max_sum = nums[0]
+        for i in range(1, n): # 注意从1开始
+            cur_sum = max(cur_sum + nums[i], nums[i])
+            max_sum = max(max_sum, cur_sum)
         return max_sum
 
 
