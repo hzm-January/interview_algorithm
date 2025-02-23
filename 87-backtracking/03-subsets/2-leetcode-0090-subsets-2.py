@@ -87,7 +87,6 @@ def subsets2_3(nums: list[int]) -> list[list[int]]:
         for i in range(cur, n):
             if nums[i] in used:
                 continue
-            # if path and path[-1] > nums[i]: continue
             used.add(nums[i])
             path.append(nums[i])
             backtraking(i + 1)

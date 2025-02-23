@@ -55,12 +55,64 @@ backtracking(i+1,sum+i) # 这意味着当前函数中的sum值没有改变，省
 
 技巧2：使用used数组标记已经访问过的节点。详见：[回溯-去重](#15-回溯-去重)
 
+### 1.3.2 组合
+1 求组合，单层搜索逻辑中遍历从startIndex到n-1
+2 如果有重复元素，需要排序，然后树层去重  
+```python
+def permute(nums: list[int]) -> list[list[int]]:
+    n = len(nums)
+    path, ans = [], []
+    used = [0] * n
 
+    def backtracking():
+        if len(path) == n:
+            ans.append(path.copy())
+            return
+
+        for i in range(0, n):  # 注意这里是从0到n-1
+            if used[i] == 1: continue
+            path.append(nums[i])
+            used[i] = 1
+            backtracking()
+            used[i] = 0
+            path.pop()
+    backtracking()
+    return ans
+```
+```python
+def subsets2_3(nums: list[int]) -> list[list[int]]:
+    """ 
+        子集2
+    """
+    path, ans = [], []
+    n = len(nums)
+    def backtraking(cur):
+        ans.append(path.copy())
+        if cur>=n: return # 可以省略，因为单层逻辑最大为len(nums)
+        used = set()
+        for i in range(cur, n):
+            if nums[i] in used:
+                continue
+            used.add(nums[i])
+            path.append(nums[i])
+            backtraking(i + 1)
+            path.pop()
+    nums.sort()
+    backtraking(0)
+    return ans
+```
 
 ### 1.3.1 全排列
+1 求排列，单层搜索逻辑中遍历从0到n-1  
+2 需要used数组标记deep方向已经访问过的元素索引，类似树枝去重，去的是已访问过的元素  
+3 如果有重复元素，需要树层去重  
 ```python
-""" 无重复数字数组 全排列 """
 def permute(nums: list[int]) -> list[list[int]]:
+    """ 
+        全排列
+        无重复数字数组 全排列 
+        树枝去重
+    """
     path, ans = [], []
     used = [0] * len(nums)
 
@@ -69,7 +121,7 @@ def permute(nums: list[int]) -> list[list[int]]:
             tmp = path.copy()
             ans.append(tmp)
             return
-        for i in range(len(nums)):
+        for i in range(len(nums)): # 求排列，遍历从0到n-1
             if used[i]: continue
             path.append(nums[i])
             used[i] = 1
@@ -80,8 +132,63 @@ def permute(nums: list[int]) -> list[list[int]]:
     backtrack()
     return ans
 ```
+```python
+def permuteUnique(nums: list[int]) -> list[list[int]]:
+    """
+        全排列2
+        原集合有重复元素
+        树枝去重+树层去重
+        需对原集合元素排序
+    """
+    n = len(nums)
+    path, ans = [], []
+    used_deep = [0] * n
 
+    def backtracking():
+        if len(path) == n:
+            ans.append(path.copy())
+            return
+        used_level = set()
+        for i in range(n):
+            if used_deep[i] == 1: continue
+            if nums[i] in used_level: continue
+            path.append(nums[i])
+            used_level.add(nums[i])
+            used_deep[i] = 1
+            backtracking()
+            used_deep[i] = 0
+            path.pop()
 
+    nums.sort()
+    backtracking()
+    return ans
+```
+```python
+""" 全排列 2 """
+def permuteUnique2(nums: list[int]) -> list[list[int]]:
+    n = len(nums)
+    path, ans = [], []
+    used = [0] * n
+
+    def backtracking():
+        if len(path) == n:
+            ans.append(path.copy())
+            return
+        for i in range(n):
+            # 树层去重，used[i]==0或者1都可以
+            if i>0 and nums[i-1]==nums[i] and used[i-1]==0: continue # 树层上去重，更高效
+            # if i>0 and nums[i-1]==nums[i] and used[i-1]==1: continue # 实际是树枝去重，较低效
+            if used[i] == 1: continue
+            path.append(nums[i])
+            used[i] = 1
+            backtracking()
+            used[i] = 0
+            path.pop()
+
+    nums.sort()
+    backtracking()
+    return ans
+```
 ## 1.4 回溯-剪枝
 
 剪枝剪的是子节点，所以一定发生在单层搜索逻辑中，一般都是修改循环的退出条件，将`nums.size`修改为`n-(k-path.size)+1`。
@@ -294,7 +401,7 @@ def findSubsequences(nums: list[int]) -> list[list[int]]:
         # if startIndex>=n: # 可省略，因为下面的循环最大为n-1，如果startIndex为n，不会再进入循环
         #     return
         used = {} # 也可以用set
-        for i in range(startIndex, n):
+        for i in range(startIndex, n): # 求组合时，从startIndex到n-1
             if nums[i] in used and used[nums[i]]==1: continue # 树层去重
             used[nums[i]] = 1
             if path and path[-1] > nums[i]: continue # 非递减过滤
@@ -317,7 +424,7 @@ def permute(nums: list[int]) -> list[list[int]]:
             ans.append(path.copy())
             return
 
-        for i in range(0, n):  # 注意这里是从0到n-1
+        for i in range(0, n):  # 求排列时，注意这里是从0到n-1
             if used[i] == 1: continue
             path.append(nums[i])
             used[i] = 1 # 标记深度搜索方向当前索引位置的元素已被访问
@@ -343,7 +450,7 @@ def permuteUnique(nums: list[int]) -> list[list[int]]:
             ans.append(path.copy())
             return
         used_level = set() # 树层去重
-        for i in range(n):
+        for i in range(n): # 求排列时，遍历0~n-1
             if used_deep[i] == 1: continue # 树枝去重
             if nums[i] in used_level: continue # 树层去重
             path.append(nums[i])
