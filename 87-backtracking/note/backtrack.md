@@ -156,11 +156,30 @@ def solve(k: int, n: int) -> list[list[int]]:
 结果去重
 
 ### 1.5.1 树层去重
-1 排序  
-2 
+在允许对原始集合排序的题目中树层去重：  
+1 排序   
+2 树层去重（used数组或者startIndex）  
+> 子集2，组合总和2
+
+在不允许对原始集合排序的题目中中树层去重：  
+1 树层去重（used数组去重，因为没有对原始数集排序，所以每个单层逻辑都要重置used数组）  
+> 非递减子序列  
+> 注：该树层去重方法不能用于子集2和组合总和2。  
+> 如果用该树层去重方法解决子集2，错误测试样例如下：  
+> 测试样例：[4,4,4,1,4]  
+> 1）如果不进行非递减操作：  
+> 输出：[[],[4],[4,4],[4,4,4],[4,4,4,1],[4,4,4,1,4],[4,4,4,4],[4,4,1],[4,4,1,4],[4,1],[4,1,4],[1],[1,4]]  
+> 预期：[[],[1],[1,4],[1,4,4],[1,4,4,4],[1,4,4,4,4],[4],[4,4],[4,4,4],[4,4,4,4]]  
+> 注意输出中：[4,4,4,1] 和 [4,4,1,4] 属于重复子集  
+> 2）如果进行非递减操作：  
+> 输出：[[],[4],[4,4],[4,4,4],[4,4,4,4],[1],[1,4]]  
+> 预期：[[],[1],[1,4],[1,4,4],[1,4,4,4],[1,4,4,4,4],[4],[4,4],[4,4,4],[4,4,4,4]]  
+> 注意输出中：没有[1,4,4,4]，因为[4,4,4,1]被非递减操作过滤了
+
 ```python
 def combinationSum2(candidates: list[int], target: int) -> list[list[int]]:
     """
+        组合总和2
         回溯 - 树层去重 - used数组去重
     :param candidates:
     :param target:
@@ -199,6 +218,7 @@ def combinationSum2(candidates: list[int], target: int) -> list[list[int]]:
 ```python
 def combinationSum2_2(candidates: list[int], target: int) -> list[list[int]]:
     """
+        组合总和2
         回溯 - 树层去重 - startindex去重 该代码中cur即是startindex 
     """
     path, ans = [], []
@@ -227,7 +247,32 @@ def combinationSum2_2(candidates: list[int], target: int) -> list[list[int]]:
     return ans
 
 ```
+```python
 
+def findSubsequences(self, nums: List[int]) -> List[List[int]]:
+    """ 
+        非递减子序列
+        回溯 树层去重 
+    """
+    n = len(nums)
+    path, ans = [], []
+
+    def backtracking(startIndex):
+        if len(path) >= 2:
+            ans.append(path.copy())
+        # if startIndex>=n: # 可省略，因为下面的循环最大为n-1，如果startIndex为n，不会再进入循环
+        #     return
+        used = {} # 也可以用set
+        for i in range(startIndex, n):
+            if nums[i] in used and used[nums[i]]==1: continue # 树层去重
+            used[nums[i]] = 1
+            if path and path[-1] > nums[i]: continue # 非递减过滤
+            path.append(nums[i])
+            backtracking(i + 1)
+            path.pop()
+    backtracking(0)
+    return ans
+```
 ## 2 相关题目
 ### 2.1 组合问题
 0077 组合 - 1 回溯； <font color='red'>2 非递归字典序法</font>\
@@ -253,7 +298,7 @@ LCR 0082 组合总和2 - 1 回溯\
 
 
 0046 全排列\
-注：树枝去重。方法：used数组
+注：树枝去重。方法：used数组  
 <img src="assets/timu_quanpailie.png" alt="assets/timu_quanpailie.png" style="width: 350px; height: 300px;" />
 
 
@@ -282,3 +327,6 @@ LCR 0079 子集 - 1 回溯
 
 0090 子集2 - 1 回溯 \
 注：有重复元素，树层去重：使用used数组，或者startIndex树层去重。
+
+0491 非递减子序列  
+
