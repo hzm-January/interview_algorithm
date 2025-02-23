@@ -60,41 +60,41 @@ def subsets2_2(nums: list[int]) -> list[list[int]]:
     return ans
 
 
-# def subsets2_3(nums: list[int]) -> list[list[int]]:
-#     """
-#         错误代码
-#         测试样例：[4,4,4,1,4]
-#         1）如果不进行非递减操作：
-#         输出：[[],[4],[4,4],[4,4,4],[4,4,4,1],[4,4,4,1,4],[4,4,4,4],[4,4,1],[4,4,1,4],[4,1],[4,1,4],[1],[1,4]]
-#         预期：[[],[1],[1,4],[1,4,4],[1,4,4,4],[1,4,4,4,4],[4],[4,4],[4,4,4],[4,4,4,4]]
-#         注意输出中：[4,4,4,1] 和 [4,4,1,4] 属于重复子集
-#         2）如果进行非递减操作：
-#         输出：[[],[4],[4,4],[4,4,4],[4,4,4,4],[1],[1,4]]
-#         预期：[[],[1],[1,4],[1,4,4],[1,4,4,4],[1,4,4,4,4],[4],[4,4],[4,4,4],[4,4,4,4]]
-#         注意输出中：没有[1,4,4,4]，因为[4,4,4,1]被非递减操作过滤了
-#
-#         回溯 - 已知长度为n的数组nums(有重复数字)，求组合元素个数k分别为[0,...,n]的组合
-#         树层去重 - used 数组
-#     :param nums:
-#     :return:
-#     """
-#     path, ans = [], []
-#     n = len(nums)
-#     def backtraking(cur):
-#         ans.append(path.copy())
-#         if cur>=n: return # 可以省略，因为单层逻辑最大为len(nums)
-#         used = set()
-#         for i in range(cur, n):
-#             if nums[i] in used:
-#                 continue
-#             # if path and path[-1] > nums[i]: continue
-#             used.add(nums[i])
-#             path.append(nums[i])
-#             backtraking(i + 1)
-#             path.pop()
-#
-#     backtraking(0)
-#     return ans
+def subsets2_3(nums: list[int]) -> list[list[int]]:
+    """
+        如果不排序会出现错误
+        测试样例：[4,4,4,1,4]
+        1）如果不进行非递减操作：
+        输出：[[],[4],[4,4],[4,4,4],[4,4,4,1],[4,4,4,1,4],[4,4,4,4],[4,4,1],[4,4,1,4],[4,1],[4,1,4],[1],[1,4]]
+        预期：[[],[1],[1,4],[1,4,4],[1,4,4,4],[1,4,4,4,4],[4],[4,4],[4,4,4],[4,4,4,4]]
+        注意输出中：[4,4,4,1] 和 [4,4,1,4] 属于重复子集
+        2）如果进行非递减操作：
+        输出：[[],[4],[4,4],[4,4,4],[4,4,4,4],[1],[1,4]]
+        预期：[[],[1],[1,4],[1,4,4],[1,4,4,4],[1,4,4,4,4],[4],[4,4],[4,4,4],[4,4,4,4]]
+        注意输出中：没有[1,4,4,4]，因为[4,4,4,1]被非递减操作过滤了
+
+        回溯 - 已知长度为n的数组nums(有重复数字)，求组合元素个数k分别为[0,...,n]的组合
+        树层去重 - used 数组
+    :param nums:
+    :return:
+    """
+    path, ans = [], []
+    n = len(nums)
+    def backtraking(cur):
+        ans.append(path.copy())
+        if cur>=n: return # 可以省略，因为单层逻辑最大为len(nums)
+        used = set()
+        for i in range(cur, n):
+            if nums[i] in used:
+                continue
+            # if path and path[-1] > nums[i]: continue
+            used.add(nums[i])
+            path.append(nums[i])
+            backtraking(i + 1)
+            path.pop()
+    nums.sort()
+    backtraking(0)
+    return ans
 
 
 if __name__ == '__main__':

@@ -164,8 +164,8 @@ def solve(k: int, n: int) -> list[list[int]]:
 在不允许对原始集合排序的题目中中树层去重：  
 1 树层去重（used数组去重，因为没有对原始数集排序，所以每个单层逻辑都要重置used数组）  
 > 非递减子序列  
-> 注：该树层去重方法不能用于子集2和组合总和2。  
-> 如果用该树层去重方法解决子集2，错误测试样例如下：  
+> 注：该树层去重方法也能用于子集2和组合总和2，但必须对原始集合排序排序。  
+> 如果用该树层去重方法解决子集2，并且不对原始集合排序，错误测试样例如下：  
 > 测试样例：[4,4,4,1,4]  
 > 1）如果不进行非递减操作：  
 > 输出：[[],[4],[4,4],[4,4,4],[4,4,4,1],[4,4,4,1,4],[4,4,4,4],[4,4,1],[4,4,1,4],[4,1],[4,1,4],[1],[1,4]]  
@@ -247,6 +247,38 @@ def combinationSum2_2(candidates: list[int], target: int) -> list[list[int]]:
     return ans
 
 ```
+
+```python
+
+def combinationSum2_4(candidates: list[int], target: int) -> list[list[int]]:
+    """
+        组合总和2
+        回溯
+        使用 used set 树层去重
+    """
+    n = len(candidates)
+    path, ans = [], []
+
+    def backtracking(cur, sum):
+        if sum > target: return
+        if sum == target:
+            ans.append(path.copy())
+            return
+        used = set() # 也可以用字典hash
+        for i in range(cur, n):
+            val = candidates[i]
+            if sum + val > target: continue
+            if val in used: continue # 树层去重
+            used.add(val) # 标记本层已访问过val
+            path.append(val)
+            backtracking(i + 1, sum + val)
+            path.pop()
+    candidates.sort()
+    backtracking(0, 0)
+    return ans
+```
+
+
 ```python
 
 def findSubsequences(self, nums: List[int]) -> List[List[int]]:

@@ -89,6 +89,33 @@ def combinationSum2_3(candidates: list[int], target: int) -> list[list[int]]:
     return ans
 
 
+def combinationSum2_4(candidates: list[int], target: int) -> list[list[int]]:
+    """
+        回溯
+        使用 used set 树层去重
+    """
+    n = len(candidates)
+    path, ans = [], []
+
+    def backtracking(cur, sum):
+        if sum > target: return
+        if sum == target:
+            ans.append(path.copy())
+            return
+        used = set() # 也可以用字典hash
+        for i in range(cur, n):
+            val = candidates[i]
+            if sum + val > target: continue
+            if val in used: continue # 树层去重
+            used.add(val) # 标记本层已访问过val
+            path.append(val)
+            backtracking(i + 1, sum + val)
+            path.pop()
+    candidates.sort()
+    backtracking(0, 0)
+    return ans
+
+
 if __name__ == "__main__":
     candidates, target = [10, 1, 2, 7, 6, 1, 5], 8
     # ans = combinationSum2(candidates, target)
