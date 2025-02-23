@@ -280,8 +280,7 @@ def combinationSum2_4(candidates: list[int], target: int) -> list[list[int]]:
 
 
 ```python
-
-def findSubsequences(self, nums: List[int]) -> List[List[int]]:
+def findSubsequences(nums: list[int]) -> list[list[int]]:
     """ 
         非递减子序列
         回溯 树层去重 
@@ -303,6 +302,59 @@ def findSubsequences(self, nums: List[int]) -> List[List[int]]:
             backtracking(i + 1)
             path.pop()
     backtracking(0)
+    return ans
+```
+### 1.5.2 树枝去重
+used 数组标记已经访问过的节点  
+```python
+def permute(nums: list[int]) -> list[list[int]]:
+    n = len(nums)
+    path, ans = [], []
+    used = [0] * n # 树枝去重
+
+    def backtracking():
+        if len(path) == n:
+            ans.append(path.copy())
+            return
+
+        for i in range(0, n):  # 注意这里是从0到n-1
+            if used[i] == 1: continue
+            path.append(nums[i])
+            used[i] = 1 # 标记深度搜索方向当前索引位置的元素已被访问
+            backtracking()
+            used[i] = 0 # 回溯
+            path.pop()
+    backtracking()
+    return ans
+```
+
+### 1.5.3 树层去重+树枝去重
+1 排序（为了树层去重）
+2 树层去重（used数组，或者 startIndex）  
+3 树枝去重（used数组）  
+```python
+def permuteUnique(nums: list[int]) -> list[list[int]]:
+    n = len(nums)
+    path, ans = [], []
+    used_deep = [0] * n # 树枝去重
+
+    def backtracking():
+        if len(path) == n:
+            ans.append(path.copy())
+            return
+        used_level = set() # 树层去重
+        for i in range(n):
+            if used_deep[i] == 1: continue # 树枝去重
+            if nums[i] in used_level: continue # 树层去重
+            path.append(nums[i])
+            used_level.add(nums[i]) # 树层去重标记，无需排序
+            used_deep[i] = 1 # 树枝去重标记，需要回溯
+            backtracking()
+            used_deep[i] = 0 # 回溯
+            path.pop()
+
+    nums.sort() # 排序，为了树层去重
+    backtracking()
     return ans
 ```
 ## 2 相关题目
@@ -328,22 +380,23 @@ LCR 0082 组合总和2 - 1 回溯\
 
 <img src="assets/timu_zuhe_not_unique.png" alt="assets/timu_zuhe_not_unique.png" style="width: 350px; height: 300px;" />
 
-
+### 2.2 排列问题
 0046 全排列\
 注：树枝去重。方法：used数组  
 <img src="assets/timu_quanpailie.png" alt="assets/timu_quanpailie.png" style="width: 350px; height: 300px;" />
 
 
+
 0022 括号生成 - <font color='red'>1 暴力法</font> 2 回溯法 <font color='red'>3 按括号序列的长度递归</font> \
 注：回溯与传统回溯写法不同。字符串结果去重。
 
-### 2.2 字符串切割
-#### 2.1 理论
+### 2.3 字符串切割
+#### 2.3.1 理论
 单层搜索逻辑中确定切割区间$[cur, i+1]$。
 
 <img src="assets/timu_fengehuiwenzichuan.png" alt="assets/timu_fengehuiwenzichuan.png" style="width: 350px; height: 300px;" />
 
-#### 2.2 相关题目
+#### 2.3.2 相关题目
 LCR 0086 分割回文子串\
 注：可以使用动态规划预处理回文子串判断逻辑，`dp[i][j]=(dp[i+1][j-1] and s[i]==s[j])`。
 注：如果切割子串不满足条件，continue。例如：a|ab|a，因为ab不是回文子串，所以跳过继续执行后面的逻辑，再切割a|aba|，符合要求。\
@@ -351,10 +404,10 @@ LCR 0086 分割回文子串\
 LCR 0087 复原IP地址\
 注：如果切割子串不满足条件，直接return。例如：0|1111|11，因为1111不符合要求，则后面没必要切割了，再切割是0|11111|1，一定不符合要求
 
-### 2.3 子集
-#### 2.3.1 理论
+### 2.4 子集
+#### 2.4.1 理论
 与字符串切割相同
-#### 2.3.2 相关题目
+#### 2.4.2 相关题目
 LCR 0079 子集 - 1 回溯
 
 0090 子集2 - 1 回溯 \
