@@ -43,8 +43,8 @@ void backtracking(参数列表): // 参数一般事先难确定，需要什么�
     return    
 ```
 
-技巧1：数值变量的回溯可以写在调用backtracking的参数列表中。
-```python
+技巧1：数值变量的回溯可以写在调用backtracking的参数列表中，以省略回溯操作。
+```shell
 sum+=i # 更新
 backtracking(i+1)
 sum-=i # 回溯
@@ -54,6 +54,8 @@ backtracking(i+1,sum+i) # 这意味着当前函数中的sum值没有改变，省
 ```
 
 技巧2：使用used数组标记已经访问过的节点。详见：[回溯-去重](#15-回溯-去重)
+
+技巧3：搜索整个树形结构返回值用void（收集所有可能结果），搜索单个树枝返回值用bool（只要收集到一个结果就返回）
 
 ### 1.3.2 组合
 1 求组合，单层搜索逻辑中遍历从startIndex到n-1
@@ -189,6 +191,7 @@ def permuteUnique2(nums: list[int]) -> list[list[int]]:
     backtracking()
     return ans
 ```
+
 ## 1.4 回溯-剪枝
 
 剪枝剪的是子节点，所以一定发生在单层搜索逻辑中，一般都是修改循环的退出条件，将`nums.size`修改为`n-(k-path.size)+1`。
@@ -464,8 +467,10 @@ def permuteUnique(nums: list[int]) -> list[list[int]]:
     backtracking()
     return ans
 ```
+
 ## 2 相关题目
-### 2.1 组合问题
+### 2.1 一维数组
+### 2.1.1 组合问题
 0077 组合 - 1 回溯； <font color='red'>2 非递归字典序法</font>\
 
 <img src="assets/combination.png" alt="assets/combination.png" style="width: 400px; height: 300px;" />
@@ -487,7 +492,7 @@ LCR 0082 组合总和2 - 1 回溯\
 
 <img src="assets/timu_zuhe_not_unique.png" alt="assets/timu_zuhe_not_unique.png" style="width: 350px; height: 300px;" />
 
-### 2.2 排列问题
+### 2.1.2 排列问题
 0046 全排列\
 注：树枝去重。方法：used数组  
 <img src="assets/timu_quanpailie.png" alt="assets/timu_quanpailie.png" style="width: 350px; height: 300px;" />
@@ -497,13 +502,13 @@ LCR 0082 组合总和2 - 1 回溯\
 0022 括号生成 - <font color='red'>1 暴力法</font> 2 回溯法 <font color='red'>3 按括号序列的长度递归</font> \
 注：回溯与传统回溯写法不同。字符串结果去重。
 
-### 2.3 字符串切割
-#### 2.3.1 理论
+### 2.1.3 字符串切割
+#### 2.1.3.1 理论
 单层搜索逻辑中确定切割区间$[cur, i+1]$。
 
 <img src="assets/timu_fengehuiwenzichuan.png" alt="assets/timu_fengehuiwenzichuan.png" style="width: 350px; height: 300px;" />
 
-#### 2.3.2 相关题目
+#### 2.1.3.2 相关题目
 LCR 0086 分割回文子串\
 注：可以使用动态规划预处理回文子串判断逻辑，`dp[i][j]=(dp[i+1][j-1] and s[i]==s[j])`。
 注：如果切割子串不满足条件，continue。例如：a|ab|a，因为ab不是回文子串，所以跳过继续执行后面的逻辑，再切割a|aba|，符合要求。\
@@ -511,8 +516,8 @@ LCR 0086 分割回文子串\
 LCR 0087 复原IP地址\
 注：如果切割子串不满足条件，直接return。例如：0|1111|11，因为1111不符合要求，则后面没必要切割了，再切割是0|11111|1，一定不符合要求
 
-### 2.4 子集
-#### 2.4.1 理论
+### 2.1.4 子集
+#### 2.1.4.1 理论
 与字符串切割相同
 #### 2.4.2 相关题目
 LCR 0079 子集 - 1 回溯
@@ -522,3 +527,7 @@ LCR 0079 子集 - 1 回溯
 
 0491 非递减子序列  
 
+
+
+## 2.2 二维数组
+### 2.2.1 N皇后
