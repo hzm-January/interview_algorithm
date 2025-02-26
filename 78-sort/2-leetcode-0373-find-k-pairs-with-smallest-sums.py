@@ -43,18 +43,23 @@ class Solution:
         pairSum = lowerBound(left, right)  # 满足条件k对最小和时的和为pairSum
 
         # 寻找小于pairSum的元素对
-        # 以下写法超时
         ans = []
+        j = len(nums2)-1
         for num1 in nums1:
-            for num2 in nums2:
-                if num1 + num2 < pairSum:
-                    ans.append([num1, num2])
+            while j>=0 and num1+nums2[j] >= pairSum:
+                j-=1
+            for i in range(j+1):
+                if num1 + nums2[i] < pairSum:
+                    ans.append([num1, nums2[i]])
                 if len(ans) == k:
                     return ans
+        j = len(nums2)-1
         for num1 in nums1:
-            for num2 in nums2:
-                if num1 + num2 == pairSum:
-                    ans.append([num1, num2])
+            while j>=0 and num1+nums2[j] > pairSum:
+                j-=1
+            for i in range(j + 1):
+                if num1 + nums2[i] == pairSum:
+                    ans.append([num1, nums2[i]])
                 if len(ans) == k:
                     return ans
 
