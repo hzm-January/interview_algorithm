@@ -7,6 +7,7 @@ class Solution:
     #
     #     """
     #         错误代码：该写法有一个超长测试点不通过，超时
+    #           排查发现原因是：partition函数中，快慢指针的分区方式性能差，要换成两个指针一个从前到后，一个从后到前，遇到符合条件的才交换，可以解决超时问题。
     #         快排
     #     """
     #
@@ -50,6 +51,7 @@ class Solution:
             # p_i = random.randint(l, r)
             # nums[p_i], nums[r] = nums[r], nums[p_i]
             pivot = nums[r]
+            #  以下分区代码可以解决超时问题，双指针，一个指针从前到后，一个指针从后到前，符合条件才交换。
             i, j = l, r - 1  # 初始化 i 和 j
             while i <= j:
                 while nums[i] > pivot:  # 找到左边第一个 >= partition 的元素
