@@ -144,9 +144,9 @@ class Solution:
             #  以下分区代码可以解决超时问题，双指针，一个指针从前到后，一个指针从后到前，符合条件才交换。
             i, j = l, r - 1  # 初始化 i 和 j
             while i <= j:
-                while nums[i] > pivot:  # 找到左边第一个 >= partition 的元素
+                while nums[i] > pivot:  # 找到左边第一个 > partition 的元素
                     i += 1
-                while nums[j] < pivot:  # 找到右边第一个 <= partition 的元素
+                while nums[j] < pivot:  # 找到右边第一个 < partition 的元素
                     j -= 1
                 if i <= j:
                     nums[i], nums[j] = nums[j], nums[i]  # 交换元素
@@ -188,9 +188,9 @@ class Solution:
             #  以下分区代码可以解决超时问题，双指针，一个指针从前到后，一个指针从后到前，符合条件才交换。
             i, j = l, r - 1  # 初始化 i 和 j
             while i <= j:
-                while nums[i] > pivot:  # 找到左边第一个 >= partition 的元素
+                while nums[i] > pivot:  # 找到左边第一个 > partition 的元素
                     i += 1
-                while nums[j] < pivot:  # 找到右边第一个 <= partition 的元素
+                while nums[j] < pivot:  # 找到右边第一个 < partition 的元素
                     j -= 1
                 if i <= j:
                     nums[i], nums[j] = nums[j], nums[i]  # 交换元素
@@ -217,6 +217,93 @@ class Solution:
 
         return qSort(0, len(nums) - 1)
 
+    def findKthLargest4_3(self, nums: List[int], k: int) -> int:
+        """
+            快排 规范写法 官方题解 排序从小到大
+            这种写法的规范写法，比三路划分性能更好！
+
+        """
+
+        def partition(l, r):
+            p_i = random.randint(l, r)  # 通过提交性能对比，发现随机选择pivot在第k大元素问题中，能将性能从300ms提升到50ms
+            nums[p_i], nums[r] = nums[r], nums[p_i]
+            pivot = nums[r]
+            #  以下分区代码可以解决超时问题，双指针，一个指针从前到后，一个指针从后到前，符合条件才交换。
+            i, j = l-1, r+1  # 初始化 i 和 j
+            while i < j:
+                i+=1
+                while nums[i] < pivot:  # 找到左边第一个 < partition 的元素
+                    i += 1
+                j-=1
+                while nums[j] > pivot:  # 找到右边第一个 > partition 的元素
+                    j -= 1
+                if i < j:
+                    nums[i], nums[j] = nums[j], nums[i]  # 交换元素
+            return j
+
+        def qSort(l, r, k):
+            # 注意：为什么这里直接返回nums[k-1]，不断缩小搜索区间来逼近第 k 个最大元素。
+            # 当区间缩小到只有一个元素时，这个元素一定是我们要找的结果，因为：
+            # 在每次分区操作中，我们已经确保了左边的元素都大于等于基准元素，右边的元素都小于基准元素。
+            # 通过递归或迭代，我们已经将搜索范围缩小到了第k个最大元素所在的区间。
+            # 当区间只有一个元素时，这个元素就是第k个最大元素。
+
+            if l >= r: return nums[k]  # 因为此时数组0~k-2一定是小于nums[k-1]的数，nums[k-1]就是最终答案
+            # if l >= r: return nums[r] # 这里返回nums[r]也可以
+            # if l >= r: return nums[l] # 这里返回nums[l]也可以
+            p = partition(l, r)
+            if p >= k:  # 注意这里与findKthLargest4中写法不同，可AC
+                return qSort(l, p, k)
+            else:
+                return qSort(p + 1, r, k)
+
+        return qSort(0, len(nums) - 1, len(nums)-k) # 求第n-k小
+    def findKthLargest4_4(self, nums: List[int], k: int) -> int:
+        """
+            快排 规范写法 官方题解 排序从大到小
+            这种写法的规范写法，比三路划分性能更好！
+
+        """
+
+        def partition(l, r):
+            # p_i = random.randint(l, r)  # 通过提交性能对比，发现随机选择pivot在第k大元素问题中，能将性能从300ms提升到50ms
+            # nums[p_i], nums[r] = nums[r], nums[p_i]
+            pivot = nums[r]
+            #  以下分区代码可以解决超时问题，双指针，一个指针从前到后，一个指针从后到前，符合条件才交换。
+            i, j = l-1, r+1  # 初始化 i 和 j
+            while i < j:
+                i+=1
+                while nums[i] > pivot:  # 找到左边第一个 > partition 的元素
+                    i += 1
+                j-=1
+                while nums[j] < pivot:  # 找到右边第一个 < partition 的元素
+                    j -= 1
+                if i < j and nums[i]!=nums[j]: # 不相同时再交换，相同不用交换
+                    nums[i], nums[j] = nums[j], nums[i]  # 交换元素
+            return i
+
+        def qSort(l, r):
+            # 注意：为什么这里直接返回nums[k-1]，不断缩小搜索区间来逼近第 k 个最大元素。
+            # 当区间缩小到只有一个元素时，这个元素一定是我们要找的结果，因为：
+            # 在每次分区操作中，我们已经确保了左边的元素都大于等于基准元素，右边的元素都小于基准元素。
+            # 通过递归或迭代，我们已经将搜索范围缩小到了第k个最大元素所在的区间。
+            # 当区间只有一个元素时，这个元素就是第k个最大元素。
+
+            if l >= r: return nums[k-1]  # 因为此时数组0~k-2一定是大于nums[k-1]的数，nums[k-1]就是最终答案
+            # if l >= r: return nums[r] # 这里返回nums[r]也可以
+            # if l >= r: return nums[l] # 这里返回nums[l]也可以
+            p = partition(l, r) # p返回的是符合条件范围的下一个位置
+            print(nums)
+            # 注意：该写法中，不能拆开写为以下，报错，测试样例：[3,2,1,5,6,4]
+            # if p==k: return nums[k-1]
+            # if p>k: return qSort(l,p-1)
+            if p >= k:  # p返回的是符合条件范围的下一个位置。
+                return qSort(l, p-1)
+            else:
+                return qSort(p, r)
+
+        return qSort(0, len(nums) - 1) # 求第n-k小
+    
     def findKthLargest2(self, nums: List[int], k: int) -> int:
         """ 快排 """
 
@@ -267,12 +354,15 @@ if __name__ == '__main__':
     # nums,k = [5, 1, 6, 2, 4, 3], 3
     nums, k = [3, 2, 1, 5, 6, 4], 2
     # nums, k = [3, 2, 3, 1, 2, 4, 5, 5, 6], 4
+    # nums,k=[3,2,1,1,1,1,1,1,1,1,1,1,1],9
     # ans = Solution().findKthLargest(nums, k)
     # print(nums)
     # print(ans)
     # ans = Solution().findKthLargest(nums, k)
-    ans = Solution().findKthLargest1_2(nums, k)
+    # ans = Solution().findKthLargest1_2(nums, k)
     # ans = Solution().findKthLargest4(nums, k)
+    # ans = Solution().findKthLargest4_3(nums, k)
+    ans = Solution().findKthLargest4_5(nums, k)
     # ans = Solution().findKthLargest2(nums, k)
     print(nums)
     print(ans)
