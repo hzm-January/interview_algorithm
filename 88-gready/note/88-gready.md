@@ -27,4 +27,75 @@ leetcode 0053 最大子数组和（最大子序和）\
 leetcode 0122 买卖股票的最佳时机2  
 只要利润大于0，就累加。  
 ## 最小生成树
-## 
+## 两个维度贪心
+先考虑一个维度，再考虑另一个维度  
+### 题目
+leetcode 0135 分发糖果  
+leetcode 0406 根据身高重建队列  
+
+## 区间贪心
+### 理论
+区间不相交问题：给出N个开区间$(x,y)$，从中选择尽可能多的开区间，使得这些开区间两两没有交集
+
+<img src="assets/qujian.png" alt="assets/qujian.png" style="width: 400px; height: 250px;" />
+
+区间选点问题：给出N个闭区间$[x,y]$，求最少需要确定多少个点，才能使每个闭区间中都至少存在一个点  
+
+<img src="assets/qujian2.png" alt="assets/qujian2.png" style="width: 400px; height: 250px;" />
+
+#### 三部曲
+贪心思路1：优先取左端点较大的区间  
+1 左端点从大到小排序，如果左端点相同，按照右端点从小到大排序（重复区间取右端点较小者）  
+2 遍历取出符合条件的区间，区间不相交问题中`cur_right<=pre_left`，区间选点问题中`cur_right<pre_left` 
+
+> 为什么重复区间取右端点较小者？  
+> 例如：[1,3], [2,5], [4,6]，如果重复区间取右端点较大者。  
+> (1) 计数器初始化为1，上个区间初始化为[1,3]  
+> (2) 2<3，判断当前区间与上个区间有重复，计数器不计数，更新右端点较大者，右端点为5  
+> (3) 4<5，判断当前区间与上个区间有重复，计数器不计数，更新右端点较大者，右端点为6  
+> 发现：计数结果为1，三个区间都被判断为重复区间。这不合理，因为如果选点为3，只能命中前两个区间，如果选点为4，只能命中后两个区间，
+> 找不到一个点，可以同时命中三个区间。
+
+贪心思路2：优先取右端点较小的区间  
+1 右端点从小到大排序，如果右端点相同，按照左端点从大到小排序（重复区间取左端点较大者）  
+2 遍历取出符合条件的区间，区间不相交问题中`cur_right<=pre_left`，区间选点问题中`cur_right<pre_left`  
+
+```python
+def findMinArrowShots(points: list[list[int]]) -> int:
+    """ 贪心思路1 优先取左端点较大的区间 """
+    points.sort(key=lambda x: (-x[0], x[1]))
+    print(points)
+    pre_left = points[0][1] + 1  # 上一个区间的左端点，初始值赋值为左端点最大的区间的右端点+1
+    ans = 0
+    for point in points:
+        cur_right = point[1] 
+        if cur_right < pre_left: # 这里必须是小于，不能是小于等于，例[2,3] [1,2]，只选择[2,3]即可选中2，没有必要再选择2也在的区间[1,2]
+            ans += 1
+            pre_left = point[0] # pre_left=cur_left
+    return ans
+```
+
+```python
+def findMinArrowShots2(points: list[list[int]]) -> int:
+    """ 贪心思路2：优先取右端点最小 """
+    points.sort(key=lambda x: (x[1], -x[0]))
+    print(points)
+    ans=0
+    pre_right = points[0][0] - 1 # 上一个区间的右端点，初始化为第一个区间的左端点-1
+    for point in points:
+        cur_left = point[0] #
+        if cur_left>pre_right: # 当前左端点大于上一个区间的右端点
+            ans+=1
+            pre_right = point[1] # 更新 pre_right
+    return ans
+```
+
+### 相关题目
+
+leetcode 0452 用最少数量的箭引爆气球  
+
+leetcode 
+
+## 其他
+leetcode 0860 柠檬水找零  
+贪心局部最优：每次找零都尽量用较大的面额找零  
