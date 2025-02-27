@@ -45,6 +45,7 @@ leetcode 0122 买卖股票的最佳时机2
 ### 题目
 
 leetcode 0135 分发糖果  
+
 leetcode 0406 根据身高重建队列
 
 ## 区间贪心
@@ -147,7 +148,13 @@ def findMinArrowShots2(points: list[list[int]]) -> int:
 
 leetcode 0452 用最少数量的箭引爆气球
 
-leetcode
+leetcode 0435 无重叠区间  
+
+leetcode 0056 合并区间  
+
+leetcode 0763 划分字母区间  
+注：此题与跳远游戏相似  
+
 
 ## 其他
 
