@@ -23,7 +23,7 @@ class Solution:
             case1 左有覆盖 2，且右有覆盖 2 -> 父节点 无覆盖 0
             case2 左右至少一个摄像头 1 -> 父节点 有覆盖 2
             case3 左右至少一个无覆盖 0 -> 父节点 摄像头 1
-            case4 根节点需单独处理
+            case4 根节点无监督，需单独安装摄像头
 
             空节点 返回 有覆盖
 
@@ -39,16 +39,20 @@ class Solution:
             left = dfs(root.left)
             right = dfs(root.right)
             if left == 2 and right == 2:
+                # case1 左有覆盖 2，且右有覆盖 2 -> 父节点 无覆盖 0
                 root.val = 0
             if left == 1 or right == 1:
+                # case2 左右至少一个摄像头 1 -> 父节点 有覆盖 2
                 root.val = 2
             if left == 0 or right == 0:
+                # case3 左右至少一个无覆盖 0 -> 父节点 摄像头 1
                 ans[0] += 1
                 root.val = 1
             return root.val
 
         dfs(root)
         print(root.val)
+        # case4 根节点无监督，需单独安装摄像头
         if root.val == 0:  # 根节点无监督
             root.val = 1
             ans[0] += 1
