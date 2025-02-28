@@ -67,109 +67,25 @@ if __name__ == '__main__':
 #### 1.1.4.2 迭代法
 栈模拟递归，注意先进后出。
 
+迭代法：空指针法、bool标记法、无标记法  
 
+迭代法都需要借助栈实现遍历  
 
 #### 1.1.4.1 深度优先遍历
-前序遍历（中左右）：递归法、迭代法
-```python
-def preorderTraversal(root: TreeNode) -> list[int]:
-    """ 回溯 前序遍历 """
-    # 回溯函数
-    def pre_traverse(root, ans): # 1 回溯参数列表和返回值
-        if not root: # 2 终止条件
-            return
-        # 3 单层搜索逻辑
-        ans.append(root.val)
-        pre_traverse(root.left, ans)
-        pre_traverse(root.right, ans)
-        
-    ans = [] # 结果保存数组
-    pre_traverse(root, ans)
-    return ans
+前序遍历（中左右）：递归法、迭代法 [二叉树前序遍历-递归法-迭代法](../01-binary-tree/0144-binary-tree-preorder-traversal.py)
 
-```
-```python
-def preorderTraversal3(root: TreeNode) -> list[int]:
-    """
-        非递归 统一写法 前序遍历
-    """
-    stack, ans = [], []
-    cur = root
-    while cur or stack:
-        while cur:
-            stack.append(cur) # 访问中，左
-            ans.append(cur.val) # 处理中，左 # 处理右
-            cur = cur.left
-        cur = stack.pop() # 访问右
-        cur = cur.right
-    return ans
-```
+中序遍历（左中右）：递归法、迭代法 [二叉树中序遍历-递归法-迭代法](../01-binary-tree/0094-binary-tree-inorder-traversal.py)
 
-中序遍历（左中右）：递归法、迭代法
-```python
-def inorderTraversal(root: TreeNode) -> list[int]:
-    """ 回溯 中序遍历 """
-    def traverse(cur, ans): # 1 参数列表与返回值
-        if not cur: return # 2 终止条件
-        # 3 单层搜索逻辑
-        if cur.left: traverse(cur.left, ans)
-        ans.append(cur.val)
-        if cur.right: traverse(cur.right, ans)
-    ans =[]
-    traverse(root, ans)
-    return ans
-```
-```python
-def inorderTraversal3(root: TreeNode) -> list[int]:
-    """ 迭代 统一写法 中序遍历"""
-    stack,ans=[],[]
-    cur = root
-    while cur or stack:
-        while cur: # 访问 中，左，右
-            stack.append(cur)
-            cur = cur.left
-        cur = stack.pop() # 处理 左，中，右
-        ans.append(cur.val) # 处理 左，中，右
-        cur = cur.right # 访问右
-    return ans
-```
-后序遍历（左右中）：递归法、迭代法
-```python
-def postorderTraversal(root: TreeNode) -> list[int]:
-    """ 回溯 后序遍历 """
-    def traverse(cur, ans): # 1 回溯函数参数列表与返回值
-        if not cur: return # 2 终止条件
-        # 3 单层搜索逻辑
-        if cur.left: traverse(cur.left, ans)
-        if cur.right: traverse(cur.right, ans)
-        ans.append(cur.val)
-    ans=[]
-    traverse(root, ans)
-    return ans
-```
-```python
-def postorderTraversal3(root: TreeNode) -> list[int]:
-    """ 迭代 统一写法 后序遍历 """
-    stack, ans = [], []
-    cur = root
-    prev = None
-    while cur or stack:
-        while cur: # 访问 中，左， 右
-            stack.append(cur)
-            cur = cur.left
-        cur = stack[-1]
-        if cur.right and cur.right!=prev: # right 已经处理过
-            cur = cur.right
-        else:
-            ans.append(cur.val) # 处理 左，右， 中
-            stack.pop()
-            prev = cur
-            cur = None
-    return ans
-```
+
+后序遍历（左右中）：递归法、迭代法 [二叉树后序遍历-递归法-迭代法](../01-binary-tree/0145-binary-tree-postorder-traversal.py)
 
 #### 1.1.4.2 广度优先遍历
 层序遍历：队列+迭代法
+
+[二叉树层序遍历-栈](../01-binary-tree/0102-binary-tree-level-order-traversal.py)
+
+
+
 
 ## 1.2 二叉树相关题目
 ### 1.2.1 二叉树前中后序遍历
