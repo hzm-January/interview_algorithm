@@ -148,6 +148,8 @@ def findMinArrowShots2(points: list[list[int]]) -> int:
 
 leetcode 0452 用最少数量的箭引爆气球
 
+<img src="assets/qujian3.png" alt="assets/qujian3.png" style="width: 400px; height: 200px;" />
+
 leetcode 0435 无重叠区间  
 
 leetcode 0056 合并区间  
