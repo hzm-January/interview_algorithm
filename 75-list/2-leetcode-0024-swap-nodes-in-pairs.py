@@ -11,15 +11,25 @@ class Solution:
         dummy = ListNode(-1,head)
         p = dummy.next
         prev = dummy
+        # 1-2-3-4
+        # 2-1-3-4
         while p and p.next:
+            # 1-3
             tmp = p.next
             p.next = tmp.next
+            # 2-1
             tmp2 = tmp.next
             tmp.next = p
+            # prev-2
             prev.next = tmp
+            # update prev==1
             prev = p
+            # update p==3
             p = tmp2
         return dummy.next
+
+
+
     def show(self,head):
         p = head
         while p:
