@@ -20,9 +20,13 @@ class Solution:
     def reverseList2(self, head: Optional[ListNode]) -> Optional[ListNode]:
         p = head
         prev = None
-        while p:
+        # 1-2-3-4
+        while p: # p==2 prev==1
+            # backup3 2x3 2-1
             tmp = p.next
             p.next = prev
+            # update prev==2
             prev = p
+            # update p==3
             p = tmp
         return prev

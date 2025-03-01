@@ -14,10 +14,10 @@ class Solution:
         # 1-2-3-4
         # 2-1-3-4
         while p and p.next:
-            # 1-3
+            # backup2 1x2 1-3
             tmp = p.next
             p.next = tmp.next
-            # 2-1
+            # backup3 2x3 2-1
             tmp2 = tmp.next
             tmp.next = p
             # prev-2
