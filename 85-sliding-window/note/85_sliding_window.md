@@ -27,6 +27,7 @@ def minSubArrayLen2(self, target: int, nums: List[int]) -> int:
 
 
 # 滑动窗口-相关题目
-leetcode 0209 长度最小的子数组
+leetcode 0209 长度最小的子数组  
+注：该题窗口为target，即窗口内元素总和刚好大于等于target，如果窗口内元素总和大于target很多，需要移动左边界，如果窗口内元素总和小于target时，需要移动右边界。  
 
 
