@@ -1,3 +1,8 @@
+"""
+    值得学习
+    边界条件的确定：卡尔版-代入极端情况看看是否符合条件，例如1,0等
+
+"""
 class ListNode:
     def __init__(self, x):
         self.val = x
