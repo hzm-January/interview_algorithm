@@ -10,7 +10,8 @@ class Solution:
         i = 0
         while i < n and nums[i] < 0:
             i += 1
-
+        # 从第一个非负整数索引处，向两边遍历
+        # 平方较小的先加入结果集
         p, q = i - 1, i
         while p >= 0 and q < n:
             if -nums[p] > nums[q]:
