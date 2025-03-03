@@ -57,6 +57,7 @@ class Solution:
         while stack:
             cur = stack.pop()
             if cur:
+                # 当前节点的左右子节点还未被访问
                 # 右子树入栈
                 if cur.right: stack.append(cur.right)
                 stack.append(cur)
@@ -64,6 +65,7 @@ class Solution:
                 # 左子树入栈
                 if cur.left: stack.append(cur.left)
             else:
+                # 当前节点为None，说明下一个栈顶元素的左右节点已经被访问过，可以进行处理了
                 ans.append(stack.pop().val)  # 处理当前节点
         return ans
 
