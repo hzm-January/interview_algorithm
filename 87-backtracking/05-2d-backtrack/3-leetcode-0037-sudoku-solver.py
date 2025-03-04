@@ -21,6 +21,8 @@ class Solution:
         local_n, local_m = math.ceil(n / local_size), math.ceil(m / local_size)  # 局部矩阵的个数
         local_occ = [[[0] * (n + 1) for _ in range(local_m)] for _ in range(local_n)]  # 3x3占用
 
+        space = []
+
         # 预处理棋盘占用情况
         for i in range(n):
             for j in range(n):
@@ -28,6 +30,8 @@ class Solution:
                     row_occ[i][int(board[i][j])] = 1
                     col_occ[j][int(board[i][j])] = 1
                     local_occ[i // local_size][j // local_size][int(board[i][j])] = 1
+                else:
+                    space.append((i,j))
 
         # print('col_occ', col_occ)
         # print('row_occ', row_occ)
@@ -39,6 +43,8 @@ class Solution:
             return True
 
         def backtrack():
+            # 单层搜索逻辑这里写的有问题，不应该每次都扫描整个矩阵
+            # 应该先统计出要搜索的位置，然后回溯搜索位置，且单层搜索1~9
             for row in range(n):
                 for col in range(m):
                     if board[row][col] != '.': continue
