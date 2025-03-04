@@ -11,7 +11,6 @@ class Solution:
         Do not return anything, modify board in-place instead.
         """
         """ 
-            超时代码，一个测试点超时不通过，其他正常
             回溯 
         """
         n, m = len(board), len(board[0])  # 题目已知board长度等于9，方阵
@@ -20,7 +19,6 @@ class Solution:
         local_size = 3
         local_n, local_m = math.ceil(n / local_size), math.ceil(m / local_size)  # 局部矩阵的个数
         local_occ = [[[0] * (n + 1) for _ in range(local_m)] for _ in range(local_n)]  # 3x3占用
-
         space = []
 
         # 预处理棋盘占用情况
@@ -31,38 +29,32 @@ class Solution:
                     col_occ[j][int(board[i][j])] = 1
                     local_occ[i // local_size][j // local_size][int(board[i][j])] = 1
                 else:
-                    space.append((i,j))
+                    space.append((i, j))
 
-        # print('col_occ', col_occ)
-        # print('row_occ', row_occ)
-        # print('local_occ', local_occ)
         def check(row, col, k):
             if col_occ[col][k]: return False
             if row_occ[row][k]: return False
             if local_occ[row // local_size][col // local_size][k]: return False
             return True
 
-        def backtrack():
-            # 单层搜索逻辑这里写的有问题，不应该每次都扫描整个矩阵
-            # 应该先统计出要搜索的位置，然后回溯搜索位置，且单层搜索1~9
-            for row in range(n):
-                for col in range(m):
-                    if board[row][col] != '.': continue
-                    for k in range(1, 10):
-                        if check(row, col, k):
-                            col_occ[col][k] = 1
-                            row_occ[row][k] = 1
-                            local_occ[row // local_size][col // local_size][k] = 1
-                            board[row][col] = str(k)
-                            if backtrack(): return True
-                            board[row][col] = '.'
-                            local_occ[row // local_size][col // local_size][k] = 0
-                            row_occ[row][k] = 0
-                            col_occ[col][k] = 0
-                    return False  # 单层搜索1~9没有找到答案
-            return True  # 完成搜索且没有返回False
+        def backtrack(pos):
+            if pos == len(space):
+                return True
+            row, col = space[pos]
+            for k in range(1, 10):
+                if check(row, col, k):
+                    col_occ[col][k] = 1
+                    row_occ[row][k] = 1
+                    local_occ[row // local_size][col // local_size][k] = 1
+                    board[row][col] = str(k)
+                    if backtrack(pos + 1): return True
+                    board[row][col] = '.'
+                    local_occ[row // local_size][col // local_size][k] = 0
+                    row_occ[row][k] = 0
+                    col_occ[col][k] = 0
+            return False  # 单层搜索1~9没有找到答案
 
-        backtrack()
+        backtrack(0)
         # print(board)
 
     def solveSudoku2(self, board: List[List[str]]) -> None:
@@ -188,7 +180,7 @@ if __name__ == '__main__':
     #          [".", ".", "2", "5", ".", "6", "4", ".", "."], [".", "8", ".", ".", ".", ".", ".", "1", "."],
     #          [".", ".", ".", ".", ".", ".", ".", ".", "."]]
     # start = time.time()
-    # # Solution().solveSudoku(board)
+    Solution().solveSudoku(board)
     # end = time.time()
     # print('time: ', end - start)
     # print(board)
@@ -196,5 +188,5 @@ if __name__ == '__main__':
     # end2 = time.time()
     # print('time: ', end2 - end)
     # print(board)
-    Solution().solveSudoku3(board)
+    # Solution().solveSudoku3(board)
     print(board)
