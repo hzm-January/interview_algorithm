@@ -140,7 +140,7 @@ class Solution:
         for i in range(n):
             for j in range(m):
                 if board[i][j] != '.':
-                    digit = int(board[i][j])-1 # 数字1~9，用二进制从右往左的0~8位表示
+                    digit = int(board[i][j]) - 1  # 数字1~9，用二进制从右往左的0~8位表示
                     flip(i, j, digit)  # 记录当前数字在当前行、列和局部矩阵中出现过
                 else:
                     spaces.append((i, j))
@@ -157,16 +157,16 @@ class Solution:
             availPos = ~(row_occ[row] | col_occ[col] | local_occ[row // local_size][col // local_size]) & ((1 << n) - 1)
             while availPos:
                 curPos = availPos & (-availPos)  # 取出最低位的1
-                digit = bin(curPos).count('0') - 1 # 获取数字，0b100 统计0个数3个，去掉标识二进制开头的0b中的0，则digital=2
-                flip(i,j,digit)
-                board[row][col] = str(digit+1)
+                digit = bin(curPos).count('0') - 1  # 获取数字，0b100 统计0个数3个，去掉标识二进制开头的0b中的0，则digital=2
+                flip(row, col, digit)
+                board[row][col] = str(digit + 1)
                 backtrack(pos + 1)
-
-                board[row][col] = '.'
-                flip(i,j,digit)
-                availPos = availPos & (availPos - 1)  # 将最后一位1置为0，单层搜索逻辑
                 if success[0]:
                     return
+                board[row][col] = '.'
+                flip(row, col, digit)
+                availPos = availPos & (availPos - 1)  # 将最后一位1置为0，单层搜索逻辑
+
         backtrack(0)
 
 
