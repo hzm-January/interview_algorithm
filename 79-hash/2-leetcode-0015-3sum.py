@@ -20,6 +20,7 @@ class Solution:
                 else: # 找到答案
                     ans.append([nums[i], nums[left], nums[right]])
                     # left和right去重
+                    # 值得学习，只用一个索引就可以对结果集中答案进行去重
                     while left < right and nums[left] == nums[left + 1]: left += 1
                     while left < right and nums[right] == nums[right - 1]: right -= 1
                     left += 1
