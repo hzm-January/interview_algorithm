@@ -3,9 +3,13 @@ from typing import List
 
 class Solution:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
-        """ 左右指针 """
+        """
+            三数之和，排序 + 左右指针
+            结果集要求唯一，所以需要分别对 num1,num2,num3 去重
+            num1去重：nums[i]==nums[i-1]
+        """
         n = len(nums)
-        nums.sort() # 一定要排序
+        nums.sort()  # 一定要排序
         ans = []
         for i in range(n):
             if nums[i] > 0: continue
@@ -17,7 +21,7 @@ class Solution:
                     left += 1
                 elif nums[left] + nums[right] > target:
                     right -= 1
-                else: # 找到答案
+                else:  # 找到答案
                     ans.append([nums[i], nums[left], nums[right]])
                     # left和right去重
                     # 值得学习，只用一个索引就可以对结果集中答案进行去重
@@ -25,7 +29,6 @@ class Solution:
                     while left < right and nums[right] == nums[right - 1]: right -= 1
                     left += 1
                     right -= 1
-
         return ans
 
 

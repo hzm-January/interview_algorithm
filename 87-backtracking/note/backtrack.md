@@ -24,7 +24,31 @@ def find(nums, amount):
 如何理解回溯法？- 所有回溯法都可以抽象为树形结构。每个节点的宽度是被处理集合的大小。树的深度是递归的深度。\
 
 
-<img src="assets/huisu.png" alt="assets/huisu.png" style="width: 400px; height: 300px;" />
+<img src="assets/huisu.png" alt="assets/huisu.png" style="width: 400px; height: 300px;" />  
+
+
+### 1.2.1 找到即返回
+关于二叉树深度搜索中找到目标值即终止的考虑：  
+1 定义一个标记值  
+2 在递归终止条件处增加判断标记值  
+3 当找到目标值时，修改该标记值  
+```python
+def kthSmallest(root, k: int) -> int:
+    """ 递归中序遍历 """
+    cnt = [0]
+    ans = [-1] # 结果集-标记值
+    def inorder(root):
+        if not root or ans[-1] != -1:  # 递归终止条件增加标记值判断 ans[-1]!=-1是剪枝，没有也能AC，只是耗时长
+            return  # ans[-1] != -1 剪枝的是 找到结果后 return 上层再执行inorder(root.right)
+        inorder(root.left)
+        cnt[0] += 1
+        if cnt[0] == k:
+            ans[0] = root.val # 找到目标值，并标记
+            return
+        inorder(root.right)
+    inorder(root)
+    return ans[0]
+```
 
 ## 1.3 回溯模板
 ```text

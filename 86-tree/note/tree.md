@@ -64,6 +64,31 @@ if __name__ == '__main__':
 应该返回`False`，因为根节点`1`不是叶子节点，该树到叶子节点的路径只有一条，其路径总和为`1+2=3`  
 2 如果题目没有要求叶子节点，则递归终止条件为`node is None`。
 
+
+关于找到目标值即终止的考虑：  
+1 定义一个标记值  
+2 在递归终止条件处增加判断标记值  
+3 当找到目标值时，修改该标记值  
+```python
+def kthSmallest(root, k: int) -> int:
+    """ 递归中序遍历 """
+    cnt = [0]
+    ans = [-1] # 结果集-标记值
+
+    def inorder(root):
+        if not root or ans[-1] != -1:  # 递归终止条件增加标记值判断 ans[-1]!=-1是剪枝，没有也能AC，只是耗时长
+            return  # ans[-1] != -1 剪枝的是 找到结果后 return 上层再执行inorder(root.right)
+        inorder(root.left)
+        cnt[0] += 1
+        if cnt[0] == k:
+            ans[0] = root.val # 找到目标值，并标记
+            return
+        inorder(root.right)
+
+    inorder(root)
+    return ans[0]
+```
+
 #### 1.1.4.2 迭代法
 栈模拟递归，注意先进后出。
 
@@ -75,7 +100,6 @@ if __name__ == '__main__':
 前序遍历（中左右）：递归法、迭代法 [二叉树前序遍历-递归法-迭代法](../01-binary-tree/0144-binary-tree-preorder-traversal.py)
 
 中序遍历（左中右）：递归法、迭代法 [二叉树中序遍历-递归法-迭代法](../01-binary-tree/0094-binary-tree-inorder-traversal.py)
-
 
 后序遍历（左右中）：递归法、迭代法 [二叉树后序遍历-递归法-迭代法](../01-binary-tree/0145-binary-tree-postorder-traversal.py)
 
