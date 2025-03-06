@@ -96,19 +96,32 @@ def kthSmallest(root, k: int) -> int:
 
 迭代法都需要借助栈实现遍历  
 
-#### 1.1.4.1 深度优先遍历
+#### 1.1.4.3 深度优先遍历
 前序遍历（中左右）：递归法、迭代法 [二叉树前序遍历-递归法-迭代法](../01-binary-tree/0144-binary-tree-preorder-traversal.py)
 
 中序遍历（左中右）：递归法、迭代法 [二叉树中序遍历-递归法-迭代法](../01-binary-tree/0094-binary-tree-inorder-traversal.py)
 
 后序遍历（左右中）：递归法、迭代法 [二叉树后序遍历-递归法-迭代法](../01-binary-tree/0145-binary-tree-postorder-traversal.py)
 
-#### 1.1.4.2 广度优先遍历
+#### 1.1.4.4 广度优先遍历
 层序遍历：队列+迭代法
 
 [二叉树层序遍历-栈](../01-binary-tree/0102-binary-tree-level-order-traversal.py)
 
+#### 1.1.4.5 二叉树遍历总结
+二叉树的 DFS 有两个要素：「访问相邻结点」和「判断 base case」
 
+1 访问相邻结点  
+
+二叉树的相邻结点非常简单，只有左子结点和右子结点两个。
+二叉树本身就是一个递归定义的结构：一棵二叉树，它的左子树和右子树也是一棵二叉树。
+那么 DFS 遍历只需要递归调用左子树和右子树即可。 
+
+2 判断 base case   
+
+一般来说，二叉树遍历的 base case 是 root == null。
+这样一个条件判断其实有两个含义：一方面，这表示 root 指向的子树为空，不需要再往下遍历了。
+另一方面，在 root == null 的时候及时返回，可以让后面的 root.left 和 root.right 操作不会出现空指针异常。
 
 
 ## 1.2 二叉树相关题目
