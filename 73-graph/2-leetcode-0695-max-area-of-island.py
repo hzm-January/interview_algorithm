@@ -32,6 +32,7 @@ class Solution:
         return maxArea
 
     def maxAreaOfIsland2(self, grid: List[List[int]]) -> int:
+        """ 网格dfs 非递归 迭代法 """
         n, m = len(grid), len(grid[0])
         stack = []
         maxArea = 0
@@ -57,6 +58,32 @@ class Solution:
                 maxArea = max(maxArea, curArea)
         return maxArea
 
+    def maxAreaOfIsland3(self, grid: List[List[int]]) -> int:
+        """ 广度优先搜索  bfs 队列 """
+        n, m = len(grid), len(grid[0])
+        queue = []
+        maxArea = 0
+        def inArea(i, j):
+            return 0 <= i < n and 0 <= j < m
+
+        for i in range(n):
+            for j in range(m):
+                if grid[i][j] != 1: continue
+                queue.append((i, j))
+                curArea = 0
+                while queue:
+                    cur_i, cur_j = queue.pop(0)
+                    if not inArea(cur_i, cur_j): continue
+                    if grid[cur_i][cur_j] != 1: continue
+                    grid[cur_i][cur_j] = 2
+                    curArea+=1
+                    queue.append((cur_i + 1, cur_j))
+                    queue.append((cur_i - 1, cur_j))
+                    queue.append((cur_i, cur_j + 1))
+                    queue.append((cur_i, cur_j - 1))
+                maxArea = max(maxArea, curArea)
+
+        return maxArea
 
 if __name__ == '__main__':
     # grid = [[0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0],
@@ -66,4 +93,5 @@ if __name__ == '__main__':
     # grid = [[0, 0, 0, 0, 0, 0, 0, 0]]
     grid = [[1, 1, 0, 1, 1], [1, 0, 0, 0, 0], [0, 0, 0, 0, 1], [1, 1, 0, 1, 1]]
     # print(Solution().maxAreaOfIsland(grid))
-    print(Solution().maxAreaOfIsland2(grid))
+    # print(Solution().maxAreaOfIsland2(grid))
+    print(Solution().maxAreaOfIsland3(grid))
