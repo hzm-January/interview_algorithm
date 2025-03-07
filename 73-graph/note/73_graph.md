@@ -1,5 +1,75 @@
 # 图理论
 
+## 图的遍历
+### 图深度优先搜索dfs 
+### 带标记dfs
+```python
+graph ={}
+ans= []
+visited={}
+def dfs(s1, s2, weight):
+    # 带返回值，防止错误：s1,s2都在图中，但是不在同一个集合，没有s1到s2的路径，这时需要给结果集中添加-1.0
+    if s1 not in graph or s2 not in graph:
+        ans.append(-1.0)
+        return True
+    if s1 == s2:
+        ans.append(weight)
+        return True
+    visited[s1] = True
+    result = False # 注意
+    for key, val in graph[s1].items():
+        if key in visited: continue
+        result = dfs(key, s2, weight * val)
+        if result: return True # 注意，True直接返回，False继续
+    return result
+```
+## 并查集
+处理有传递性关系的问题  
+
+```python
+# 1 定义集合并初始化
+father=[]
+# 2 查
+def find(x):
+    # 迭代写法
+    a = x
+    while x != father[x]:
+        x = father[x]
+    while a != father[a]:
+        tmp = a
+        a = father[a]  #回溯
+        father[tmp] = x
+    return father[x]
+
+def find2(x):
+    # 递归写法
+    if x != father[x]:
+        father[x] = find(x)
+    return father[x]
+
+# 并
+def union(x, y):
+    xf = father[x]
+    yf = father[y]
+    if xf != yf:
+        father[xf] = yf
+```
+## 拓扑排序
+有向无环图：一个有向图的任意顶点都无法通过一些有向边回到自身  
+
+拓扑排序：将有向无环图的所有顶点排成一个线性序列，使得对图G中的任意两个顶点u,v，如果存在边u->v，那么序列中u一定在v前面  
+
+应用：判断有向图中是否有环
+
+### 求解拓扑排序的方法
+1 定义一个队列Q，并把所有入度为0的结点加入队列  
+2 取队首结点，输出。然后删去所有从它出发的边，并令这些边到达的顶点的入度减1，如果某个顶点的入度减为0，则将其加入队列
+3 反复执行2操作，直到队列为空  
+注：如果队列为空时入过队的结点数恰好为N，说明排序成功，图中无环，否则，拓扑排序失败，图中有环  
+注：需要额外的容器存储每个顶点的入度  
+注：步骤中的入度指：前导节点->当前节点，即完成前导节点才能到当前节点  
+注：如果要求有多个入度为0的顶点，选择编号最小的顶点，需要将队列替换为优先级队列（堆），并保持队首元素（堆顶）是优先级队列中最小的元素  
+
 # 图相关问题
 ## 岛屿问题
 > 回顾二叉树遍历的两个要素：「访问相邻结点」和「判断 base case」  

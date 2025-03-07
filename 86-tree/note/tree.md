@@ -88,6 +88,27 @@ def kthSmallest(root, k: int) -> int:
     inorder(root)
     return ans[0]
 ```
+```python
+graph ={}
+ans= []
+visited={}
+def dfs(s1, s2, weight):
+    # 带返回值，防止错误：s1,s2都在图中，但是不在同一个集合，没有s1到s2的路径，这时需要给结果集中添加-1.0
+    if s1 not in graph or s2 not in graph:
+        ans.append(-1.0)
+        return True
+    if s1 == s2:
+        ans.append(weight)
+        return True
+    visited[s1] = True
+    result = False
+    for key, val in graph[s1].items():
+        if key in visited: continue
+        result = dfs(key, s2, weight * val)
+        if result: return True
+    return result
+```
+
 
 #### 1.1.4.2 迭代法
 栈模拟递归，注意先进后出。
@@ -102,6 +123,28 @@ def kthSmallest(root, k: int) -> int:
 中序遍历（左中右）：递归法、迭代法 [二叉树中序遍历-递归法-迭代法](../01-binary-tree/0094-binary-tree-inorder-traversal.py)
 
 后序遍历（左右中）：递归法、迭代法 [二叉树后序遍历-递归法-迭代法](../01-binary-tree/0145-binary-tree-postorder-traversal.py)
+
+##### 带标记的dfs
+```python
+graph ={}
+ans= []
+visited={}
+def dfs(s1, s2, weight):
+    # 带返回值，防止错误：s1,s2都在图中，但是不在同一个集合，没有s1到s2的路径，这时需要给结果集中添加-1.0
+    if s1 not in graph or s2 not in graph:
+        ans.append(-1.0)
+        return True
+    if s1 == s2:
+        ans.append(weight)
+        return True
+    visited[s1] = True
+    result = False
+    for key, val in graph[s1].items():
+        if key in visited: continue
+        result = dfs(key, s2, weight * val)
+        if result: return True
+    return result
+```
 
 #### 1.1.4.4 广度优先遍历
 层序遍历：队列+迭代法
