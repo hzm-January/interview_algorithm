@@ -70,6 +70,62 @@ def union(x, y):
 注：步骤中的入度指：前导节点->当前节点，即完成前导节点才能到当前节点  
 注：如果要求有多个入度为0的顶点，选择编号最小的顶点，需要将队列替换为优先级队列（堆），并保持队首元素（堆顶）是优先级队列中最小的元素  
 
+```python
+import collections
+from typing import List
+def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
+    """ 拓扑排序 bfs """
+    # 1 建图
+    graph = collections.defaultdict(list)
+    indegree = [0] * numCourses
+    for u, v in prerequisites:
+        graph[v].append(u)
+        indegree[u] += 1
+    
+    # 2 拓扑排序
+    queue = collections.deque([i for i, u in enumerate(indegree) if u == 0])
+    ans = []
+    while queue:
+        v = queue.popleft()
+        # 与v相邻的边都删除，且对应的结点入度-1
+        for u in graph[v]:
+            indegree[u] -= 1 #
+            if indegree[u] == 0:
+                queue.append(u)
+        # graph[v] = [] # 可省略
+        ans.append(v) # 收集结果
+
+    return ans if len(ans) == numCourses else []
+def findOrder2(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
+    """ 拓扑排序 dfs """
+    graph = collections.defaultdict(list)
+    for u, v in prerequisites:
+        graph[v].append(u)
+
+    ans = []
+    visited = [0]*numCourses
+    def dfs(node):
+        visited[node]=1 # 标记为正在访问
+        for u in graph[node]:
+            if visited[u]==2:continue # 已完成的节点跳过
+            if visited[u]==1: # 第二次遇到正在访问的节点，说明有环
+                return False
+            if not dfs(u):
+                return False
+        visited[node]=2 # 标记为已完成
+        # 所有子节点有处理完成后，结点加入结果集（注意这里与BFS的思想相反）
+        ans.append(node)
+        return True # 如果处理子节点完成，返回True
+
+    for i in range(numCourses):
+        if visited[i]==0:
+            if not dfs(i):
+                return [] # 有向图中有环，返回空集合
+    ans.reverse() # 栈顶到栈底
+    return ans
+```
+
+
 # 图相关问题
 ## 岛屿问题
 > 回顾二叉树遍历的两个要素：「访问相邻结点」和「判断 base case」  
