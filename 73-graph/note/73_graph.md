@@ -1,6 +1,8 @@
 # 图理论
 
 ## 图的遍历
+### 图的广度优先遍历
+
 ### 图深度优先搜索dfs 
 ### 带标记dfs
 ```python
@@ -15,10 +17,10 @@ def dfs(s1, s2, weight):
     if s1 == s2:
         ans.append(weight)
         return True
-    visited[s1] = True
+    visited[s1] = True # 标记已访问
     result = False # 注意
     for key, val in graph[s1].items():
-        if key in visited: continue
+        if key in visited: continue # 已访问过，跳过
         result = dfs(key, s2, weight * val)
         if result: return True # 注意，True直接返回，False继续
     return result
@@ -124,6 +126,44 @@ def findOrder2(self, numCourses: int, prerequisites: List[List[int]]) -> List[in
     ans.reverse() # 栈顶到栈底
     return ans
 ```
+## 无权图单源最短路径
+可以理解为权值为1的单源最短路问题  
+
+dist数组的作用：  
+1 存放源点到当前顶点的最短路径  
+2 相当于visited标记数组，初始化为负无穷或者正无穷，根据是否无穷，判断该顶点是否被访问过。   
+
+
+<img src="assets/single-start-shortest-path.png" style="width:400px;height:250px;"></img>  
+
+<img src="assets/single-start-shortest-path-2.png" style="width:400px;height:200px;"></img>  
+
+与BFS的区别  
+
+<img src="assets/single-start-shortest-path-3.png" style="width:400px;height:220px;"></img>  
+
+
+
+## 有权图单源最短路径 - Dijkstra
+注：Dijkstra不能处理有负权值的情况
+
+为什么Dijkstra算法是贪心算法却能保证全局最优？
+> 1 非负权重：边的权重为非负数，保证了当前找到的最短路径不会被后续的路径更新。
+> 2 路径是按照递增（非递减）的顺序生成，通过不断更新节点的最短距离，确保每个节点的最短路径是全局最优的。
+
+
+<img src="assets/single-start-shortest-path-weighted-3.png" style="width:400px;height:200px;"></img> <img src="assets/single-start-shortest-path-weighted.png" style="width:400px;height:200px;"></img>
+
+<img src="assets/single-start-shortest-path-weighted-2.png" style="width:400px;height:270px;"></img>
+
+# 多源最短路径
+D矩阵如何初始化？  
+两个顶点间有直接边，初始化为边权，没有直接边，初始化为正无穷
+
+
+<img src="assets/double-start-shortest-path-weighted.png" style="width:400px;height:200px;"></img>
+
+<img src="assets/double-start-shortest-path-weighted-2.png" style="width:400px;height:250px;"></img>
 
 
 # 图相关问题
