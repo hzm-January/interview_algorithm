@@ -44,7 +44,7 @@ class Solution:
         dummy = ListNode(-1, head)
         slow, fast = dummy, dummy
         for i in range(n + 1): # TODO：值得学习，用步数，控制链表的迭代
-            fast = fast.next
+            fast = fast.next # 从0到n，先走了n+1步，1是最后要遍历到倒数第n个节点的前一个节点
         while fast:
             fast = fast.next
             slow = slow.next
