@@ -107,7 +107,7 @@ class Solution:
                 adj[i].append(j)
                 adj[j].append(i)
         if endIndex == -1: return -1  # 答案不存在于bank中
-        # 2 bfs搜索
+        # 2 无权单源最短路径
         from collections import deque
         q = deque([i for i, b in enumerate(bank) if diffOne(b, startGene)])
         dist = [1 if diffOne(b, startGene) else -1 for b in bank] # 距离数组
@@ -119,7 +119,45 @@ class Solution:
                 dist[nxt] = dist[cur] + 1 # 距离+1
                 q.append(nxt)
         return -1
+    def minMutation3(self, startGene: str, endGene: str, bank: List[str]) -> int:
+        if startGene == endGene: return -1
+        if endGene not in bank: return -1
 
+        def diffOne(s1, s2):
+            return sum([c1 != c2 for c1, c2 in zip(s1, s2)]) == 1
+
+        # 1 建图 - 无向图
+        n = len(bank)
+        adj = [[] for _ in range(n)]
+        endIndex = -1
+        for i in range(n):
+            if bank[i] == endGene:
+                endIndex = i
+            for j in range(i + 1, n):
+                if not diffOne(bank[i], bank[j]): continue
+                adj[i].append(j)
+                adj[j].append(i)
+
+        # bank中没有找到endGene，即endGene不合法
+        if endIndex == -1:
+            return -1
+
+        # 2 BFS搜索，将步数记录在队列中，即BFS中的层
+        import collections
+        queue = collections.deque([(i, 1) for i, s in enumerate(bank) if diffOne(s, startGene)])
+        visited = set([i for i, s in enumerate(bank) if diffOne(s, startGene)])
+        while queue:
+            cur, step = queue.popleft()
+            if cur == endIndex:
+                return step
+            for nxt in adj[cur]:
+                if nxt in visited: continue  # 已处理过
+                if nxt == endIndex:
+                    return step + 1
+                visited.add(nxt)
+                queue.append((nxt, step + 1))  # 待处理顶点入队列
+
+        return -1
 
 if __name__ == '__main__':
     startGene = "AACCGGTT"
@@ -127,3 +165,4 @@ if __name__ == '__main__':
     bank = ["AACCGGTA", "AACCGCTA", "AAACGGTA"]
     print(Solution().minMutation2_2(startGene, endGene, bank))
     print(Solution().minMutation2_3(startGene, endGene, bank))
+    print(Solution().minMutation3(startGene, endGene, bank))
