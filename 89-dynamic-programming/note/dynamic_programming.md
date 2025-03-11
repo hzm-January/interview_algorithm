@@ -114,9 +114,11 @@ def change(target: int, items: list[int]) -> int:
 
 先遍历背包后遍历物品：排列（有顺序，结果中既有1,2也有2,1，因为每轮迭代都会遍历所有物品，物品是内层循环）
 
-在先遍历背包后遍历物品的代码中，由于每次对容量 j 都尝试所有物品，因此会统计所有可能的排列。
+为什么先遍历背包后遍历物品结果是排列？
+
+在先遍历背包后遍历物品的代码中，由于每次对容量 j 都尝试放入所有可能的物品，因此会统计所有可能的排列。
 在代码中，$dp[j] = max(dp[j], dp[j - weights[i]] + values[i])$ 会多次更新 $dp[j]$，
-每次更新都基于不同的物品选择顺序。 这种更新方式会导致 $dp[j]$ 的值受到物品选择顺序的影响，从而得到排列数。
+每次更新都基于不同的物品选择顺序。这种更新方式会导致 $dp[j]$ 的值受到物品选择顺序的影响，从而得到排列数。
 
 例如：
 对于容量 j = 3 \
@@ -124,6 +126,10 @@ def change(target: int, items: list[int]) -> int:
 尝试放入物品 B：$dp[3] = max(dp[3], dp[1] + 2) = 3$ \
 结果：$dp[3] = 3$ \
 在这个过程中，$dp[3]$ 的值是通过多次尝试不同的物品选择顺序得到的，因此最终结果是排列数。 \
+
+<img src="assets/wanquanbeibao_3.png" alt="assets/wanquanbeibao_3.png" style="width: 400px; height: 390px;">
+
+<img src="assets/wanquanbeibao_4.jpg" alt="assets/wanquanbeibao_4.jpg" style="width: 250px; height: 150px;">
 
 ```python
 def change2(amount: int, items: list[int]) -> int:
