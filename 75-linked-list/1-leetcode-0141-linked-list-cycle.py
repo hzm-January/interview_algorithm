@@ -7,17 +7,27 @@ class ListNode:
         self.val = x
         self.next = None
 
+
 def hasCycle(head: Optional[ListNode]) -> bool:
+    """
+        快慢指针
+        快指针为NULL退出，无环，返回false
+        快慢指针相遇，有环，返回True
+    """
     if not head or not head.next: return False
     p, q = head, head.next
-    while q!=p:
+    while q != p:
         # q!=p前提下，q或q.next说明已到达终点，证明无环
-        if not q or not q.next: return False # 只要快指针到达终点，终止运行。
+        if not q or not q.next: return False  # 只要快指针到达终点，终止运行。
         p = p.next
         q = q.next.next
     return True
 
+
 def hasCycle2(head: Optional[ListNode]) -> bool:
+    """
+        哈希表
+    """
     if not head or not head.next: return False
     seen = set()
     p = head
@@ -26,6 +36,3 @@ def hasCycle2(head: Optional[ListNode]) -> bool:
         seen.add(p)
         p = p.next
     return False
-
-
-
