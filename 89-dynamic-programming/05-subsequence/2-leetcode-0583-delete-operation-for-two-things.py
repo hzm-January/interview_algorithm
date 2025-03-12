@@ -1,5 +1,12 @@
 class Solution:
     def minDistance(self, word1: str, word2: str) -> int:
+        """
+           1 dp定义：dp[i][j] word1以i-1结尾和word2以j-1结尾的字符串需要dp[i][j]步操作后相同
+           2 递推公式：相同-dp[i-1][j-1]，不同-min(dp[i-1][j]+1,dp[i][j-1]+1,dp[i-1][j-1]+2)
+           3 dp初始化：dp[i][0]=i, dp[0][j]=j
+           4 遍历顺序：从前到后，从上到下
+           5 打印：
+        """
         n, m = len(word1), len(word2)
         dp = [[0] * (m + 1) for _ in range(n + 1)]
         # dp 初始化
