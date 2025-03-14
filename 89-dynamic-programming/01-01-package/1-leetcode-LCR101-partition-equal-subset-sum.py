@@ -1,11 +1,20 @@
 def canPartition(nums: list[int]) -> bool:
-    if sum(nums) % 2 != 0: return False
+    """
+        1 dp数组含义：容量为i的背包能装数字的最大和为dp[i]
+        2 递推公式：dp[j]=max(dp[j],dp[j-weight[i]]+value[i])
+        3 dp初始化：dp[j]=0
+        4 遍历顺序：一维dp，先遍历物品后遍历背包，从左往右嵌套（从右往左）
+        5 打印：
+    """
+    if sum(nums) % 2 != 0:
+        return False
+    n = len(nums)
     target = sum(nums) // 2
     dp = [0] * (target + 1)
-    for i in range(len(nums)):
-        for j in range(target, nums[i] - 1, -1):
-            dp[j] = max(dp[j], dp[j - nums[i]] + nums[i])
-    return dp[target] == target
+    for i in range(n):  # 先遍历物品
+        for j in range(target, nums[i] - 1, -1):  # 后遍历背包，注意一维dp从后往前遍历，防止提从前往后覆盖后面计算需要用到的前面的值
+            dp[j] = max(dp[j], dp[j - nums[i]] + nums[i])  # 注意这里是更新dp[j]
+    return dp[-1] == target
 
 
 def canPartition_2(nums: list[int]) -> bool:
@@ -32,6 +41,16 @@ def canPartition_2(nums: list[int]) -> bool:
 
 
 def canPartition_3(nums: list[int]) -> bool: # 这种直接求和的 不用判断元素<2，也不用判断最大值>target
+    """
+        二维dp
+        1 dp数组含义：[0,i]之间的物品任取装满背包j的最大价值为dp[i][j]
+        2 递推公式：
+            不放物品i：dp[i][j] = dp[i - 1][j]
+            放物品i：dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - nums[i]] + nums[i])
+        3 dp数组初始化：dp[0][j]=nums[0] if j>=nums[0]
+        4 遍历顺序：
+        5 打印：
+    """
     if sum(nums) % 2 != 0: return False
     # min_value = min(nums)
     target = sum(nums) // 2
@@ -41,12 +60,12 @@ def canPartition_3(nums: list[int]) -> bool: # 这种直接求和的 不用判�
     #     dp[0][i] = min_value
     for i in range(nums[0], target + 1): # 这里用数组的第一个值进行初始化是最正确的，因为之后的遍历就是从nums[0]开始的。
         dp[0][i] = nums[0]
-    for i in range(1, len(nums)):
-        for j in range(0, target + 1): # 这里从0开始，从1开始都可以，从0开始需要再赋值一次dp[i][0]，数值都是拷贝dp[0][0]，这在初始化时都已经赋值过了。直接从1开始就可以。
+    for i in range(1, len(nums)): # 先遍历物品
+        for j in range(0, target + 1): # 后遍历背包，这里从0开始，从1开始都可以，从0开始需要再赋值一次dp[i][0]，数值都是拷贝dp[0][0]，这在初始化时都已经赋值过了。直接从1开始就可以。
             if j < nums[i]:
-                dp[i][j] = dp[i - 1][j]
+                dp[i][j] = dp[i - 1][j] # 不放物品i
             else:
-                dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - nums[i]] + nums[i])
+                dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - nums[i]] + nums[i]) # 放物品i
             # print(i,j,dp)
             # if j == target and dp[i][j] == target:
             #     return True

@@ -16,7 +16,10 @@
 ### 01背包
 #### 理论
 定义：n种物品，每种物品只能使用一次。
-遍历：二维数组实现的01背包，先遍历背包或者先遍历物品都可以。（因为递推公式由左上方和正上方推出）\
+
+遍历顺序：  
+1 二维dp数组实现的01背包，先遍历物品后遍历背包，或者先遍历背包后遍历物品都可以。（因为递推公式由左上方和正上方推出）\
+2 一维dp数组实现的01背包，必须先遍历物品后遍历背包，且背包必须倒序遍历（防止同一物品被放入背包多次，防止提前修改后面需要计算使用的数据）   
 
 <img src="assets/01beibao.png" alt="assets/01beibao.png" style="width: 400px; height: 300px;" />
 <img src="assets/01beibao_1weidp.png" alt="assets/01beibao_1weidp.png" style="width: 400px; height: 300px;" />
