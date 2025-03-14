@@ -17,7 +17,7 @@
 #### 理论
 定义：n种物品，每种物品只能使用一次。
 
-遍历顺序：  
+##### 01背包 - 遍历顺序
 1 二维dp数组实现的01背包，先遍历物品后遍历背包，或者先遍历背包后遍历物品都可以。（因为递推公式由左上方和正上方推出）\
 2 一维dp数组实现的01背包，必须先遍历物品后遍历背包，且背包必须倒序遍历（防止同一物品被放入背包多次，防止提前修改后面需要计算使用的数据）   
 
@@ -97,6 +97,7 @@ n种物品，每种物品可以使用多次
 <img src="assets/wanquanbeibao.png" alt="assets/wanquanbeibao.png" style="width: 400px; height: 250px;" />
 <img src="assets/wanquanbeibao_2.png" alt="assets/wanquanbeibao_2.png" style="width: 400px; height: 250px;" />
 
+##### 完全背包 - 遍历顺序
 先遍历物品后遍历背包：组合（没有顺序，结果中只有1,2，不可能有2,1，因为外层循环物品从0到n依次遍历）
 
 ```python
