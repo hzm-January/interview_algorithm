@@ -366,7 +366,7 @@ def combinationSum2_2(candidates: list[int], target: int) -> list[list[int]]:
         i = cur
         while i < len(candidates) and sum + candidates[i] <= target:
             # candidates[i]==candidates[i - 1] 和 i>cur 共同保证了多个相同值元素中，第一个一定会被访问，其余都不会被访问。
-            if i > cur and candidates[i] == candidates[i - 1]: # 关键 注意：这里是i>cur与使用used数组树形去重中的i>0不同
+            if i > cur and candidates[i] == candidates[i - 1]: # 关键 注意：这里是i>cur与使用used数组树形去重中的i>0不同，若换成i>0有错误
                 i += 1
                 continue
             path.append(candidates[i])
