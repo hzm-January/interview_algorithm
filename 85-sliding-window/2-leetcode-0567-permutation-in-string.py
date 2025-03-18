@@ -32,7 +32,7 @@ class Solution:
 
     def checkInclusion2(self, s1: str, s2: str) -> bool:
         """
-
+            固定长度的窗口滑动
         """
         n, m = len(s1), len(s2)
         need = collections.Counter(s1)

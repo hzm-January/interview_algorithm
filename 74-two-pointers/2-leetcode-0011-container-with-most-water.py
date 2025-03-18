@@ -10,7 +10,6 @@ class Solution:
             if area > ans[2]:
                 ans = (p, q, area)
                 # print(ans)
-
             if height[p] < height[q]:
                 p += 1
             else:
@@ -18,6 +17,7 @@ class Solution:
         return ans[2]
 
     def maxArea2(self, height: List[int]) -> int:
+        """ 双指针：小的边向中间移动 """
         p, q = 0, len(height) - 1
         ans = -1
         while p < q:
