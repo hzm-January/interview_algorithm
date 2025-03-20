@@ -146,9 +146,9 @@ dist数组的作用：
 2 相当于visited标记数组，初始化为负无穷或者正无穷，根据是否无穷，判断该顶点是否被访问过。   
 
 
-<img src="assets/single-start-shortest-path.png" style="width:400px;height:250px;"></img>  
+<img src="assets/single-start-shortest-path.png" style="width:400px;"></img>  
 
-<img src="assets/single-start-shortest-path-2.png" style="width:400px;height:200px;"></img>  
+<img src="assets/single-start-shortest-path-2.png" style="width:400px;"></img>  
 
 与BFS的区别  
 
@@ -161,7 +161,6 @@ dist数组的作用：
 为什么Dijkstra算法是贪心算法却能保证全局最优？
 > 1 非负权重：边的权重为非负数，保证了当前找到的最短路径不会被后续的路径更新。
 > 2 路径是按照递增（非递减）的顺序生成，通过不断更新节点的最短距离，确保每个节点的最短路径是全局最优的。
-
 
 <img src="assets/single-start-shortest-path-weighted-3.png" style="width:400px;height:200px;"></img> <img src="assets/single-start-shortest-path-weighted.png" style="width:400px;height:200px;"></img>
 
