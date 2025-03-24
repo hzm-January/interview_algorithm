@@ -1,5 +1,12 @@
 from typing import List
-
+"""
+    leetcode 0128 最长连续序列
+    原数组没有排序
+    思路：
+    1 遍历数组，以每一个元素为起点查找下一个元素是否在数组中，并记录最长连续长度。  
+    2 优化：判断过 x,x+1,...,x+y，就不在需要判断 x+1,...,x+y，前者包含后者，前者的长度一定大于后者  
+    3 如何判断当前元素是否需要判断与搜索？ - 判断x-1是否在数组中 
+"""
 
 class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:
